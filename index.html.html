@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jelajah Nusantara: Misi Bahasa Persatuan</title>
+<style>
+:root{--purple:#7442a7;--ink:#24304b;--cream:#fffaf0;--yellow:#ffd34f;--red:#f05a67;--blue:#3aa7df;--green:#39a978}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff7dc,#f1e8ff 55%,#e5f7ff);min-height:100vh}
+header{text-align:center;padding:24px 16px 14px}header .tag{display:inline-block;background:#fff;border:2px solid #e8d9ff;border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:800;color:var(--purple)}h1{margin:10px 0 4px;font-size:clamp(1.7rem,4vw,2.8rem);color:#50317c}header p{margin:0 auto;max-width:700px}
+main{max-width:1150px;margin:auto;padding:12px 16px 36px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:18px}.panel{background:#ffffffd9;border:1px solid #e8def4;border-radius:22px;padding:18px;box-shadow:0 8px 25px #47316b12}
+h2{font-size:1.15rem;margin:0 0 12px}.boardtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.turn{background:#f1e8ff;color:#563783;border-radius:12px;padding:8px 12px;font-weight:800}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}.tile{min-height:86px;border-radius:15px;padding:7px 4px;text-align:center;border:2px solid #ffffff;box-shadow:inset 0 0 0 1px #00000012;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:.75rem;font-weight:800}.tile .num{font-size:.72rem;opacity:.65}.tile .emoji{font-size:1.35rem;line-height:1.5}.tile .tokens{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:1rem}.knowledge{background:#fff0a8}.situation{background:#ffd4d8}.action{background:#c9edff}.group{background:#e4d4ff}.bonus{background:#c8f1d9}.start{background:#dce8ff}.finish{background:#ffe2a6}
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.legend span{font-size:.72rem;border-radius:99px;padding:5px 8px;font-weight:700}
+button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;font-size:.94rem;cursor:pointer;transition:transform .12s,filter .12s}button:hover{filter:brightness(.97);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.primary{background:var(--purple);color:white}.secondary{background:#eee5fb;color:#50317c}.good{background:#d5f4df;color:#1d6d42}.warn{background:#ffe4e6;color:#9c2835}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.dicebox{display:flex;align-items:center;gap:14px;margin:14px 0}.die{height:62px;width:62px;border-radius:16px;background:white;box-shadow:0 4px 0 #d8d1e4;display:grid;place-items:center;font-size:2.2rem}.scorelist{display:grid;gap:8px}.score{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:13px;background:#f8f5ff;border:1px solid #e8e0f4}.score.active{outline:2px solid var(--purple);background:#f0e6ff}.score strong{font-size:1rem}.score small{display:block;color:#6b6880}.card{border-radius:18px;padding:16px;margin-top:12px;background:#fff;border:2px solid #e5daf5;min-height:175px}.card .type{font-weight:900;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--purple)}.card .prompt{font-size:1.08rem;line-height:1.5;font-weight:750;margin:10px 0}.card .points{display:inline-block;background:#f2e8ff;color:#603a8d;border-radius:99px;padding:5px 10px;font-weight:900;font-size:.8rem}.small{font-size:.82rem;color:#66647a}.timer{font-size:1.45rem;font-weight:900;color:#50317c}.section{margin-top:18px}.field{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.field input{padding:10px;border:1px solid #d8cee7;border-radius:10px;min-width:0;flex:1}.notice{background:#fff5d7;border-radius:12px;padding:10px 12px;font-size:.83rem;margin-top:12px}.footer{text-align:center;padding:0 16px 24px;font-size:.8rem;color:#69627a}
+@media(max-width:850px){main{grid-template-columns:1fr}.tile{min-height:72px}.board{gap:5px}.tile .emoji{font-size:1.1rem}.panel{padding:14px}}
+@media(max-width:420px){.tile{font-size:.65rem;min-height:65px}.tile .tokens{font-size:.8rem}}
+</style>
+</head>
+<body>
+<header>
+<div class="tag">🎲 GAME EDUKASI • KELAS IV SD</div>
+<h1>Jelajah Nusantara</h1>
+<p><strong>Misi Bahasa Persatuan</strong> — belajar menggunakan bahasa Indonesia dengan bangga dan menghargai bahasa daerah.</p>
+</header>
+<main>
+<section class="panel">
+<div class="boardtop"><h2>🗺️ Papan Permainan</h2><div class="turn" id="turnLabel">Giliran: Kelompok 1</div></div>
+<p class="small">Empat kelompok bermain bergiliran pada satu papan. Lempar dadu, gerakkan pion, lalu selesaikan tantangan sesuai petak.</p>
+<div class="board" id="board"></div>
+<div class="legend">
+<span class="knowledge">💡 Pengetahuan · 10</span><span class="situation">🗣️ Situasi · 10</span><span class="action">🎭 Aksi · 10</span><span class="group">🤝 Kelompok · 15</span><span class="bonus">⭐ Bonus · +5</span>
+</div>
+<div class="dicebox"><div class="die" id="die">⚀</div><div><div class="timer" id="rollStatus">Siap bermain!</div><div class="small" id="rollHelp">Tekan tombol lempar dadu.</div></div></div>
+<div class="controls"><button class="primary" id="rollBtn">🎲 Lempar Dadu</button><button class="secondary" id="nextBtn" disabled>Lanjut ke Kelompok Berikutnya →</button><button class="warn" id="resetBtn">Mulai Ulang</button></div>
+<div class="notice">💡 Untuk Kartu Situasi, Kartu Aksi, dan Tantangan Kelompok, guru menilai jawaban/peragaan. Klik “Berhasil” jika tantangan berhasil, atau “Belum berhasil” jika belum. Poin tidak dikurangi.</div>
+</section>
+<aside class="panel">
+<h2>🏆 Papan Skor</h2>
+<div class="scorelist" id="scores"></div>
+<div class="section">
+<h2>🃏 Kartu Tantangan</h2>
+<div class="card" id="challenge"><div class="type">Petunjuk permainan</div><div class="prompt">Klik “Lempar Dadu” untuk memulai petualangan!</div><span class="points">Poin sesuai jenis kartu</span></div>
+<div class="controls"><button class="good" id="successBtn" disabled>✓ Berhasil</button><button class="warn" id="failBtn" disabled>Belum berhasil · 0 poin</button></div>
+<p class="small" id="judgeHelp">Tombol penilaian akan aktif setelah kelompok mendapat kartu tantangan.</p>
+</div>
+<div class="section">
+<h2>⏱️ Waktu Bermain</h2>
+<div class="field"><label for="minutes">Durasi (menit)</label><input id="minutes" type="number" min="1" max="90" value="20" style="max-width:90px"><button class="secondary" id="startTimer">Mulai timer</button><button class="secondary" id="pauseTimer">Jeda</button></div>
+<div class="timer" id="clock">20:00</div><p class="small">Saat waktu habis, kelompok dengan poin tertinggi menjadi pemenang. Jika seri, guru dapat memberi satu pertanyaan penentu.</p>
+</div>
+<div class="section">
+<h2>✏️ Nama Kelompok</h2>
+<div id="nameInputs"></div><button class="secondary" id="saveNames" style="margin-top:8px">Simpan Nama</button>
+</div>
+</aside>
+</main>
+<div class="footer">Draf game interaktif untuk pembelajaran Pendidikan Pancasila • Bisa dimainkan secara lokal di browser.</div>
+<script>
+const types={
+ knowledge:{label:"Soal Pengetahuan",points:10,cls:"knowledge",emoji:"💡",cards:[
+" Mengapa bahasa Indonesia disebut sebagai bahasa persatuan?",
+"Apa manfaat menggunakan bahasa Indonesia saat bertemu teman dari daerah lain?",
+"Sebutkan dua manfaat bahasa Indonesia dalam kehidupan sehari-hari!",
+"Apakah kita boleh bangga menggunakan bahasa daerah? Jelaskan!",
+"Kapan kita sebaiknya menggunakan bahasa Indonesia saat berkomunikasi?",
+"Apa yang dimaksud dengan bahasa persatuan?",
+"Sebutkan satu contoh sikap bangga menggunakan bahasa Indonesia!",
+"Apakah menggunakan bahasa daerah berarti tidak menghargai bahasa Indonesia? Jelaskan!",
+"Mengapa kita tidak boleh mengejek logat bahasa teman?",
+"Apa yang dapat terjadi jika kita menggunakan bahasa yang tidak dipahami teman saat berdiskusi?"
+]},
+ situation:{label:"Kartu Situasi",points:10,cls:"situation",emoji:"🗣️",cards:[
+"Kamu bertemu teman baru dari Papua yang tidak memahami bahasa daerahmu. Apa yang akan kamu lakukan?",
+"Temanmu berbicara dengan logat daerah yang berbeda dan beberapa siswa menertawakannya. Apa yang sebaiknya kamu lakukan?",
+"Kelompokmu menggunakan bahasa daerah masing-masing sehingga ada anggota yang tidak memahami pembicaraan. Apa solusinya?",
+"Saat upacara, kamu dan teman-teman menyanyikan lagu kebangsaan bersama. Bagaimana bahasa Indonesia menyatukan kalian sebagai siswa dari berbagai daerah?",
+"Kamu ingin mengajak teman dari Bali bermain, tetapi kalian menggunakan bahasa daerah yang berbeda. Apa yang akan kamu lakukan?",
+"Temanmu berbicara dengan keluarganya menggunakan bahasa daerah. Apakah kamu harus melarangnya? Jelaskan!",
+"Kamu diminta mempresentasikan hasil diskusi di depan kelas. Bahasa apa yang sebaiknya digunakan agar semua teman memahami?",
+"Temanmu belum memahami arti sebuah kata dalam bahasa Indonesia. Apa yang bisa kamu lakukan?",
+"Kamu mendengar teman berbicara menggunakan bahasa daerah yang belum pernah kamu dengar. Bagaimana sikapmu?",
+"Guru membentuk kelompok dengan anggota dari beberapa daerah. Bagaimana agar semua anggota bisa bekerja sama?"
+]},
+ action:{label:"Kartu Aksi",points:10,cls:"action",emoji:"🎭",cards:[
+"Praktikkan percakapan singkat untuk berkenalan dengan teman baru dari daerah lain menggunakan bahasa Indonesia.",
+"Peragakan cara mengajak teman dari daerah lain bermain menggunakan bahasa Indonesia.",
+"Peragakan cara menegur teman yang mengejek logat bahasa daerah orang lain dengan sopan.",
+"Sampaikan satu pendapat tentang pentingnya bahasa Indonesia sebagai bahasa persatuan.",
+"Peragakan cara menyapa dan menanyakan kabar teman baru menggunakan bahasa Indonesia.",
+"Peragakan cara meminta bantuan teman menggunakan bahasa Indonesia yang santun.",
+"Peragakan cara mengucapkan terima kasih kepada teman yang telah membantumu.",
+"Peragakan cara menyampaikan pendapat berbeda saat berdiskusi tanpa menyinggung teman.",
+"Ceritakan secara singkat satu hal menarik dari daerahmu menggunakan bahasa Indonesia.",
+"Peragakan cara mengajak teman yang sedang berselisih untuk berdamai menggunakan bahasa Indonesia."
+]},
+ group:{label:"Tantangan Kelompok",points:15,cls:"group",emoji:"🤝",cards:[
+"Dalam waktu 30 detik, sebutkan tiga manfaat bahasa Indonesia sebagai bahasa persatuan.",
+"Setiap anggota melanjutkan kalimat secara bergantian: “Aku bangga menggunakan bahasa Indonesia karena ….”",
+"Buat satu slogan singkat tentang bahasa Indonesia sebagai bahasa persatuan, lalu bacakan bersama-sama.",
+"Diskusikan solusi ketika salah satu anggota kelompok tidak memahami bahasa daerah yang digunakan teman-temannya, lalu sampaikan bersama.",
+"Peragakan situasi dua orang dari daerah berbeda saling berkenalan menggunakan bahasa Indonesia. Anggota lain menjadi narator.",
+"Sebutkan tiga sikap untuk menghargai teman yang memiliki bahasa daerah berbeda.",
+"Buat cerita pendek tentang persahabatan anak-anak dari tiga daerah. Setiap anggota menyumbangkan satu kalimat.",
+"Buat dan praktikkan percakapan singkat antara dua teman dari daerah berbeda yang sedang mengerjakan tugas.",
+"Diskusikan bahasa yang tepat untuk pengumuman kepada seluruh siswa di sekolah. Jelaskan alasannya.",
+"Dalam waktu 30 detik, sebutkan tiga contoh perilaku bangga menggunakan bahasa Indonesia di sekolah."
+]}
+};
+const teamColors=["#3978d4","#e95a65","#28a879","#9a63cf"];
+let teams=[{name:"Kelompok 1",pos:0,score:0},{name:"Kelompok 2",pos:0,score:0},{name:"Kelompok 3",pos:0,score:0},{name:"Kelompok 4",pos:0,score:0}];
+let current=0, waiting=false, activeChallenge=null, deckUsed={}, timerSeconds=1200, timerInterval=null, timerRunning=false, turnCount=0;
+const pathTypes=["start","knowledge","situation","action","group","knowledge","bonus","situation","action","knowledge","group","situation","bonus","action","knowledge","group","situation","action","bonus","finish"];
+const tileNames={start:"MULAI",knowledge:"Pengetahuan",situation:"Situasi",action:"Aksi",group:"Tantangan",bonus:"Bonus",finish:"FINISH"};
+const tileEmojis={start:"🚩",knowledge:"💡",situation:"🗣️",action:"🎭",group:"🤝",bonus:"⭐",finish:"🏁"};
+const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+function renderBoard(){const board=document.getElementById("board");board.innerHTML="";pathTypes.forEach((type,i)=>{const t=document.createElement("div");t.className="tile "+type;t.innerHTML=`<span class="num">PETAK ${i+1}</span><span class="emoji">${tileEmojis[type]}</span><span>${tileNames[type]}</span><div class="tokens" id="tokens-${i}"></div>`;board.appendChild(t)});renderTokens()}
+function renderTokens(){pathTypes.forEach((_,i)=>{let el=document.getElementById("tokens-"+i);if(el)el.innerHTML=""});teams.forEach((team,i)=>{let el=document.getElementById("tokens-"+team.pos);if(el){let token=document.createElement("span");token.textContent=["🔵","🔴","🟢","🟣"][i];token.title=team.name;el.appendChild(token)}})}
+function renderScores(){const box=document.getElementById("scores");box.innerHTML="";teams.forEach((t,i)=>{const d=document.createElement("div");d.className="score"+(i===current?" active":"");d.innerHTML=`<div><strong><span style="color:${teamColors[i]}">●</span> ${escapeHtml(t.name)}</strong><small>Posisi: ${t.pos+1} / ${pathTypes.length}</small></div><strong>${t.score} poin</strong>`;box.appendChild(d)});document.getElementById("turnLabel").textContent="Giliran: "+teams[current].name}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function drawCard(type){const arr=types[type].cards;let used=deckUsed[type]||[];if(used.length>=arr.length)used=[];let available=arr.map((_,i)=>i).filter(i=>!used.includes(i));let index=available[Math.floor(Math.random()*available.length)];used.push(index);deckUsed[type]=used;return arr[index]}
+function showChallenge(type,prompt){const data=types[type];activeChallenge={type,points:data.points,prompt};document.getElementById("challenge").innerHTML=`<div class="type">${data.emoji} ${data.label}</div><div class="prompt">${prompt}</div><span class="points">${data.points} poin jika berhasil</span>`;document.getElementById("successBtn").disabled=false;document.getElementById("failBtn").disabled=false;document.getElementById("judgeHelp").textContent="Diskusikan atau lakukan tantangan. Guru menilai, lalu pilih hasilnya."}
+function clearChallenge(){activeChallenge=null;document.getElementById("successBtn").disabled=true;document.getElementById("failBtn").disabled=true;document.getElementById("judgeHelp").textContent="Tekan “Lempar Dadu” untuk memulai giliran."}
+function roll(){if(waiting)return;waiting=true;document.getElementById("rollBtn").disabled=true;let roll=Math.floor(Math.random()*6)+1;document.getElementById("die").textContent=diceFaces[roll-1];const team=teams[current];team.pos=Math.min(team.pos+roll,pathTypes.length-1);renderTokens();renderScores();const type=pathTypes[team.pos];document.getElementById("rollStatus").textContent=`Dadu menunjukkan ${roll}!`;document.getElementById("rollHelp").textContent=`${team.name} maju ke petak ${team.pos+1}: ${tileNames[type]}.`;clearChallenge();if(type==="start"){document.getElementById("challenge").innerHTML='<div class="type">🚩 Petak Mulai</div><div class="prompt">Semangat! Lanjutkan perjalanan untuk mengumpulkan poin.</div>';finishTurn(false)}else if(type==="finish"){document.getElementById("challenge").innerHTML='<div class="type">🏁 Garis Akhir</div><div class="prompt">Kamu mencapai garis akhir! Permainan tetap dilanjutkan sampai waktu habis. Poin tertinggi menentukan pemenang.</div>';finishTurn(false)}else if(type==="bonus"){team.score+=5;renderScores();document.getElementById("challenge").innerHTML='<div class="type">⭐ Petak Bonus</div><div class="prompt">Hebat! Kamu mendapatkan bonus semangat Nusantara.</div><span class="points">+5 poin otomatis</span>';finishTurn(false)}else{showChallenge(type,drawCard(type));waiting=true}}
+function finishTurn(needsJudge){document.getElementById("nextBtn").disabled=false;document.getElementById("rollBtn").disabled=true;if(!needsJudge)document.getElementById("rollHelp").textContent="Giliran selesai. Lanjutkan ke kelompok berikutnya."}
+function judge(success){if(!activeChallenge)return;const team=teams[current];if(success){team.score+=activeChallenge.points;document.getElementById("rollStatus").textContent="Tantangan berhasil!";document.getElementById("rollHelp").textContent=`${team.name} mendapat ${activeChallenge.points} poin.`}else{document.getElementById("rollStatus").textContent="Tantangan belum berhasil";document.getElementById("rollHelp").textContent="Tidak ada poin yang ditambahkan atau dikurangi."}renderScores();clearChallenge();finishTurn(false)}
+function nextTurn(){current=(current+1)%teams.length;turnCount++;waiting=false;document.getElementById("nextBtn").disabled=true;document.getElementById("rollBtn").disabled=false;document.getElementById("rollStatus").textContent="Giliran berikutnya";document.getElementById("rollHelp").textContent="Tekan tombol lempar dadu.";renderScores()}
+function resetGame(){if(timerInterval)clearInterval(timerInterval);timerInterval=null;timerRunning=false;teams.forEach((t,i)=>{t.pos=0;t.score=0});current=0;waiting=false;activeChallenge=null;deckUsed={};turnCount=0;document.getElementById("die").textContent="⚀";document.getElementById("rollStatus").textContent="Siap bermain!";document.getElementById("rollHelp").textContent="Tekan tombol lempar dadu.";document.getElementById("rollBtn").disabled=false;document.getElementById("nextBtn").disabled=true;clearChallenge();renderBoard();renderScores();setTimerFromInput()}
+function setTimerFromInput(){let mins=Math.max(1,Math.min(90,Number(document.getElementById("minutes").value)||20));timerSeconds=mins*60;showClock()}
+function showClock(){let m=Math.floor(timerSeconds/60),s=timerSeconds%60;document.getElementById("clock").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+function startTimer(){if(timerInterval)clearInterval(timerInterval);if(!timerRunning&&timerSeconds<=0)setTimerFromInput();timerRunning=true;timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;showClock()}else{clearInterval(timerInterval);timerInterval=null;timerRunning=false;announceWinner()}},1000)}
+function announceWinner(){let max=Math.max(...teams.map(t=>t.score));let winners=teams.filter(t=>t.score===max).map(t=>t.name);document.getElementById("challenge").innerHTML=`<div class="type">🏆 Permainan Selesai</div><div class="prompt">${winners.length===1?"Pemenang: "+escapeHtml(winners[0]):"Skor seri: "+winners.map(escapeHtml).join(", ")}</div><span class="points">${max} poin</span><p class="small">${winners.length>1?"Berikan satu pertanyaan penentu untuk menentukan pemenang.":"Selamat! Terus bangga menggunakan bahasa Indonesia dan menghargai bahasa daerah."}</p>`;clearChallenge();document.getElementById("rollBtn").disabled=true;document.getElementById("nextBtn").disabled=true}
+function buildNameInputs(){let box=document.getElementById("nameInputs");box.innerHTML="";teams.forEach((t,i)=>{let row=document.createElement("div");row.className="field";row.style.marginBottom="7px";row.innerHTML=`<label style="width:105px">Kelompok ${i+1}</label><input id="teamName${i}" value="${escapeHtml(t.name)}" maxlength="24">`;box.appendChild(row)})}
+document.getElementById("rollBtn").addEventListener("click",roll);document.getElementById("nextBtn").addEventListener("click",nextTurn);document.getElementById("successBtn").addEventListener("click",()=>judge(true));document.getElementById("failBtn").addEventListener("click",()=>judge(false));document.getElementById("resetBtn").addEventListener("click",()=>{if(confirm("Mulai ulang permainan dan menghapus skor?"))resetGame()});document.getElementById("minutes").addEventListener("change",()=>{if(!timerRunning)setTimerFromInput()});document.getElementById("startTimer").addEventListener("click",startTimer);document.getElementById("pauseTimer").addEventListener("click",()=>{if(timerInterval)clearInterval(timerInterval);timerInterval=null;timerRunning=false});document.getElementById("saveNames").addEventListener("click",()=>{teams.forEach((t,i)=>{let val=document.getElementById("teamName"+i).value.trim();t.name=val||"Kelompok "+(i+1)});renderScores();document.getElementById("rollStatus").textContent="Nama kelompok tersimpan";});buildNameInputs();renderBoard();renderScores();setTimerFromInput();
+</script>
+</body></html>
