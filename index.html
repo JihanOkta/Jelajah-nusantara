@@ -7,19 +7,13 @@
 <title>Jelajah Nusantara: Misi Bahasa Persatuan</title>
 <style>
 :root {
-  --ungu:#7144a5;
-  --biru:#258db5;
-  --kuning:#ffdc58;
-  --merah:#ff929f;
-  --hijau:#83dda0;
-  --birumuda:#8bd8f3;
+  --ungu:#7144a5; --biru:#258db5; --kuning:#ffdc58;
+  --merah:#ff929f; --hijau:#83dda0; --birumuda:#8bd8f3;
   --tinta:#253b54;
 }
 * {box-sizing:border-box}
 body {
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  color:var(--tinta);
+  margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--tinta);
   background:linear-gradient(#bdeeff,#e7faff 45%,#fff4d5);
 }
 header {text-align:center;padding:28px 15px 18px}
@@ -48,32 +42,75 @@ h2 {font-size:19px;margin:0 0 13px}
 .turn {background:#eee4ff;color:#624091;padding:9px 13px;border-radius:12px;font-weight:bold}
 .board-wrap {position:relative}
 .board {
-  display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
   grid-template-rows:repeat(5,minmax(105px,auto));
-  gap:7px;padding:12px;
-  border:5px solid #fff;border-radius:30px;
+  gap:7px;padding:12px;border:5px solid #fff;border-radius:30px;
   background:linear-gradient(140deg,#72d3e7,#36a8ce);
   box-shadow:0 6px 0 #d5b780,inset 0 0 0 3px #b7f5ff;
   position:relative;isolation:isolate;overflow:hidden;
 }
 .board::before {
-  content:"☁️     🦜      ☁️";
-  position:absolute;top:4%;left:18%;right:18%;
+  content:"☁️     🦜      ☁️";position:absolute;top:4%;left:18%;right:18%;
   text-align:center;font-size:clamp(14px,2vw,25px);
   pointer-events:none;z-index:-1;
 }
 .tile {
-  position:relative;z-index:2;min-width:0;
-  border:3px solid white;border-radius:18px;
-  min-height:86px;padding:6px 3px;
+  position:relative;z-index:2;min-width:0;border:3px solid white;
+  border-radius:18px;min-height:86px;padding:6px 3px;
   display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;
-  font-weight:bold;font-size:clamp(9px,.85vw,12px);
-  box-shadow:0 4px 0 #225c7655;
+  justify-content:center;text-align:center;font-weight:bold;
+  font-size:clamp(9px,.85vw,12px);box-shadow:0 4px 0 #225c7655;
   transition:transform .2s;
 }
 .tile:hover {transform:translateY(-3px) rotate(-1deg)}
+.tile.landed {animation:landPop .55s ease}
+@keyframes landPop {
+  0% {transform:scale(1)}
+  45% {transform:scale(1.09) rotate(-2deg);filter:brightness(1.12)}
+  100% {transform:scale(1)}
+}
+.die.rolling {animation:diceBounce .45s ease-in-out 3}
+@keyframes diceBounce {
+  0%,100% {transform:rotate(0) translateY(0)}
+  25% {transform:rotate(-12deg) translateY(-7px)}
+  75% {transform:rotate(12deg) translateY(-4px)}
+}
+.feedback {
+  margin-top:12px;padding:12px;border-radius:14px;
+  background:#f0fbf4;border:2px solid #b9e8c8;
+  font-size:13px;line-height:1.6;
+}
+.feedback strong {display:block;margin-bottom:4px}
+.feedback.try-again {background:#fff8e5;border-color:#f3d98a}
+.flow-progress {margin:12px 0 4px}
+.flow-progress-head {
+  display:flex;justify-content:space-between;gap:8px;
+  font-size:12px;font-weight:bold;margin-bottom:6px;
+}
+.progress-track {
+  height:12px;background:#e9e2f5;border-radius:99px;
+  overflow:hidden;border:1px solid #ddd0f0;
+}
+.progress-fill {
+  height:100%;width:0;background:linear-gradient(90deg,#83dda0,#258db5);
+  border-radius:99px;transition:width .4s ease;
+}
+.phase-pill {
+  display:inline-block;background:#e6f8ff;color:#1b6782;
+  border-radius:99px;padding:5px 9px;font-size:11px;
+  font-weight:bold;margin-top:7px;
+}
+.score.active {animation:activePulse 1.8s ease-in-out infinite}
+@keyframes activePulse {
+  0%,100% {box-shadow:0 0 0 0 #7144a522}
+  50% {box-shadow:0 0 0 5px #7144a522}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    scroll-behavior:auto!important;transition-duration:.01ms!important;
+  }
+}
 .tile .num {font-size:10px;opacity:.8;margin-bottom:3px}
 .tile .emoji {font-size:clamp(19px,2.2vw,28px);line-height:1.3}
 .tile .tokens {display:flex;flex-wrap:wrap;justify-content:center;font-size:15px}
@@ -85,12 +122,11 @@ h2 {font-size:19px;margin:0 0 13px}
 .start {background:linear-gradient(145deg,#dceaff,#91baff)}
 .finish {background:linear-gradient(145deg,#fff0bf,#ffbd43)}
 .board-center {
-  grid-column:2/7;grid-row:2/5;
-  border:4px solid #fff8d5;border-radius:35px;
-  background:linear-gradient(160deg,#e3f8b9,#a7df91 45%,#77ca8c);
+  grid-column:2/7;grid-row:2/5;border:4px solid #fff8d5;
+  border-radius:35px;background:linear-gradient(160deg,#e3f8b9,#a7df91 45%,#77ca8c);
   box-shadow:0 5px 0 #267f8c,inset 0 0 0 3px #d8f5bc;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;position:relative;overflow:hidden;padding:10px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  position:relative;overflow:hidden;padding:10px;
 }
 .center-content {width:100%;position:relative;z-index:1}
 .center-title {
@@ -98,12 +134,10 @@ h2 {font-size:19px;margin:0 0 13px}
   color:#214f70;text-shadow:0 2px white;margin-bottom:5px;
 }
 .center-sub {font-size:clamp(9px,1.1vw,13px);font-weight:bold;color:#34694c}
-.map {
-  display:block;width:100%;max-height:245px;margin:auto;
-}
+.map {display:block;width:100%;max-height:245px;margin:auto}
 .island-label {
-  font-size:11px;font-weight:bold;fill:#24475a;
-  paint-order:stroke;stroke:#e6f7bd;stroke-width:3px;stroke-linejoin:round;
+  font-size:11px;font-weight:bold;fill:#24475a;paint-order:stroke;
+  stroke:#e6f7bd;stroke-width:3px;stroke-linejoin:round;
 }
 .map-note {font-size:10px;font-weight:bold;color:#35684c;margin-top:3px}
 .people {
@@ -120,20 +154,19 @@ h2 {font-size:19px;margin:0 0 13px}
   50% {transform:translateY(-9px) rotate(4deg)}
 }
 .legend-box {
-  margin-top:19px;padding:15px;
-  border:2px dashed #dfc58e;border-radius:20px;
-  background:#fffaf0;
+  margin-top:19px;padding:15px;border:2px dashed #dfc58e;
+  border-radius:20px;background:#fffaf0;
 }
 .legend-box h3 {margin:0 0 12px;font-size:16px}
-.legend {
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
-}
+.legend {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .legend-item {
-  display:flex;align-items:center;gap:9px;
-  border:1px solid #e9e4d9;border-radius:12px;
-  padding:9px;background:white;font-size:12px;font-weight:bold;
+  display:flex;align-items:center;gap:9px;border:1px solid #e9e4d9;
+  border-radius:12px;padding:9px;background:white;font-size:12px;font-weight:bold;
 }
-.swatch {width:22px;height:22px;border:2px solid #ffffff;border-radius:7px;flex-shrink:0;box-shadow:0 0 0 1px #ddd}
+.swatch {
+  width:22px;height:22px;border:2px solid #ffffff;border-radius:7px;
+  flex-shrink:0;box-shadow:0 0 0 1px #ddd;
+}
 .swatch.knowledge {background:var(--kuning)}
 .swatch.situation {background:var(--merah)}
 .swatch.action {background:var(--birumuda)}
@@ -143,16 +176,12 @@ h2 {font-size:19px;margin:0 0 13px}
 .swatch.finish {background:#ffbd43}
 .dicebox {display:flex;align-items:center;gap:15px;margin:18px 0}
 .die {
-  width:65px;height:65px;display:grid;place-items:center;
-  border-radius:18px;background:white;font-size:38px;
-  box-shadow:0 5px 0 #d8d1e4;flex-shrink:0;
+  width:65px;height:65px;display:grid;place-items:center;border-radius:18px;
+  background:white;font-size:38px;box-shadow:0 5px 0 #d8d1e4;flex-shrink:0;
 }
 .timer {font-size:24px;font-weight:900;color:var(--ungu)}
 .controls {display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-button {
-  border:0;border-radius:12px;padding:11px 14px;
-  font-size:13px;font-weight:bold;cursor:pointer;
-}
+button {border:0;border-radius:12px;padding:11px 14px;font-size:13px;font-weight:bold;cursor:pointer}
 button:disabled {opacity:.4;cursor:not-allowed}
 button:hover:not(:disabled) {filter:brightness(.96)}
 .primary {background:var(--ungu);color:white}
@@ -161,28 +190,26 @@ button:hover:not(:disabled) {filter:brightness(.96)}
 .warn {background:#ffe4e6;color:#9c2835}
 .scorelist {display:grid;gap:8px}
 .score {
-  display:flex;justify-content:space-between;align-items:center;
-  gap:8px;padding:11px;border-radius:13px;
-  background:#f8f5ff;border:1px solid #e8e0f4;
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  padding:11px;border-radius:13px;background:#f8f5ff;border:1px solid #e8e0f4;
 }
 .score.active {outline:2px solid var(--ungu);background:#f0e6ff}
 .score strong {font-size:14px}
 .score small {display:block;color:#6b6880;margin-top:4px}
 .card {
-  border-radius:18px;padding:16px;margin-top:12px;
-  background:#fff;border:2px solid #e5daf5;min-height:170px;
+  border-radius:18px;padding:16px;margin-top:12px;background:#fff;
+  border:2px solid #e5daf5;min-height:170px;
 }
 .card .type {font-weight:900;font-size:12px;color:var(--ungu)}
 .card .prompt {font-size:16px;line-height:1.6;font-weight:bold;margin:12px 0}
 .card .points {
-  display:inline-block;background:#f2e8ff;color:#603a8d;
-  border-radius:99px;padding:6px 10px;font-weight:900;font-size:12px;
+  display:inline-block;background:#f2e8ff;color:#603a8d;border-radius:99px;
+  padding:6px 10px;font-weight:900;font-size:12px;
 }
 .section {margin-top:22px}
 .field {display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
 .field input {
-  padding:10px;border:1px solid #d8cee7;border-radius:10px;
-  min-width:0;flex:1;
+  padding:10px;border:1px solid #d8cee7;border-radius:10px;min-width:0;flex:1;
 }
 .notice {background:#fff5d7;border-radius:12px;padding:12px;font-size:12px;line-height:1.6;margin-top:12px}
 .footer {text-align:center;padding:0 16px 25px;font-size:12px;color:#69627a}
@@ -223,7 +250,16 @@ button:hover:not(:disabled) {filter:brightness(.96)}
     <div class="turn" id="turnLabel">Giliran: Kelompok 1</div>
   </div>
   <p class="small">Lempar dadu secara bergiliran, ikuti petak berwarna, dan selesaikan tantangan untuk mengumpulkan poin.</p>
-
+  <div class="flow-progress" aria-live="polite">
+    <div class="flow-progress-head">
+      <span id="progressLabel">Progres Kelompok 1</span>
+      <span id="progressCount">Petak 1 dari 20</span>
+    </div>
+    <div class="progress-track" role="progressbar" aria-label="Progres perjalanan kelompok" aria-valuemin="1" aria-valuemax="20" aria-valuenow="1" id="progressTrack">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="phase-pill" id="phaseLabel">Tahap: siap memulai</span>
+  </div>
   <div class="board-wrap">
     <div class="people one">🧒🏻</div>
     <div class="people two">👧🏽</div>
@@ -231,7 +267,6 @@ button:hover:not(:disabled) {filter:brightness(.96)}
     <div class="people four">👧🏻</div>
     <div class="board" id="board"></div>
   </div>
-
   <div class="legend-box">
     <h3>🎨 Keterangan Warna Petak</h3>
     <div class="legend">
@@ -244,7 +279,6 @@ button:hover:not(:disabled) {filter:brightness(.96)}
       <div class="legend-item"><span class="swatch finish"></span>🏁 Garis Akhir</div>
     </div>
   </div>
-
   <div class="dicebox">
     <div class="die" id="die">⚀</div>
     <div>
@@ -254,6 +288,7 @@ button:hover:not(:disabled) {filter:brightness(.96)}
   </div>
   <div class="controls">
     <button class="primary" id="rollBtn">🎲 Lempar Dadu</button>
+    <button class="secondary" id="soundBtn" aria-pressed="false">🔇 Suara: mati</button>
     <button class="secondary" id="nextBtn" disabled>Lanjut ke Kelompok Berikutnya →</button>
     <button class="warn" id="resetBtn">Mulai Ulang</button>
   </div>
@@ -263,7 +298,6 @@ button:hover:not(:disabled) {filter:brightness(.96)}
 <aside class="panel">
   <h2>🏆 Papan Skor</h2>
   <div class="scorelist" id="scores"></div>
-
   <div class="section">
     <h2>🃏 Kartu Tantangan</h2>
     <div class="card" id="challenge">
@@ -277,7 +311,6 @@ button:hover:not(:disabled) {filter:brightness(.96)}
     </div>
     <p class="small" id="judgeHelp">Tombol penilaian aktif setelah kelompok mendapat kartu tantangan.</p>
   </div>
-
   <div class="section">
     <h2>⏱️ Waktu Bermain</h2>
     <div class="field">
@@ -289,7 +322,6 @@ button:hover:not(:disabled) {filter:brightness(.96)}
     <div class="timer" id="clock">20:00</div>
     <p class="small">Saat waktu habis, kelompok dengan poin tertinggi menjadi pemenang. Jika seri, guru dapat memberi pertanyaan penentu.</p>
   </div>
-
   <div class="section">
     <h2>✏️ Nama Kelompok</h2>
     <div id="nameInputs"></div>
@@ -374,6 +406,7 @@ let teams = [
 ];
 let current=0, waiting=false, activeChallenge=null, deckUsed={};
 let timerSeconds=1200,timerInterval=null,timerRunning=false;
+
 const pathTypes = [
   "start","knowledge","situation","action","group",
   "knowledge","bonus","situation","action","knowledge",
@@ -473,6 +506,32 @@ function escapeHtml(s){
  }[c]));
 }
 
+function updateFlow(){
+ const team=teams[current];
+ const progress=Math.round(((team.pos+1)/pathTypes.length)*100);
+ document.getElementById("progressLabel").textContent="Progres "+team.name;
+ document.getElementById("progressCount").textContent=`Petak ${team.pos+1} dari ${pathTypes.length}`;
+ document.getElementById("progressFill").style.width=progress+"%";
+ document.getElementById("progressTrack").setAttribute("aria-valuenow",team.pos+1);
+}
+
+let soundEnabled=false;
+let audioContext=null;
+function playTone(frequency=600,duration=.12){
+ if(!soundEnabled)return;
+ try{
+  audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+  const oscillator=audioContext.createOscillator();
+  const gain=audioContext.createGain();
+  oscillator.frequency.value=frequency;
+  oscillator.type="sine";
+  gain.gain.setValueAtTime(.07,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);
+  oscillator.connect(gain);gain.connect(audioContext.destination);
+  oscillator.start();oscillator.stop(audioContext.currentTime+duration);
+ }catch(e){}
+}
+
 function renderScores(){
  const box=document.getElementById("scores");
  box.innerHTML="";
@@ -485,6 +544,7 @@ function renderScores(){
   box.appendChild(d);
  });
  document.getElementById("turnLabel").textContent="Giliran: "+teams[current].name;
+ updateFlow();
 }
 
 function drawCard(type){
@@ -507,6 +567,7 @@ function showChallenge(type,prompt){
  document.getElementById("successBtn").disabled=false;
  document.getElementById("failBtn").disabled=false;
  document.getElementById("judgeHelp").textContent="Diskusikan atau lakukan tantangan. Guru menilai, lalu pilih hasilnya.";
+ document.getElementById("phaseLabel").textContent="Tahap: kerjakan tantangan";
 }
 
 function clearChallenge(){
@@ -526,10 +587,22 @@ function roll(){
  waiting=true;
  document.getElementById("rollBtn").disabled=true;
  const result=Math.floor(Math.random()*6)+1;
- document.getElementById("die").textContent=diceFaces[result-1];
+ const die=document.getElementById("die");
+ die.textContent=diceFaces[result-1];
+ die.classList.remove("rolling");void die.offsetWidth;die.classList.add("rolling");
  const team=teams[current];
  team.pos=Math.min(team.pos+result,pathTypes.length-1);
  renderTokens();renderScores();
+
+ const landedTile=document.querySelectorAll(".tile")[team.pos];
+ if(landedTile){
+  landedTile.classList.remove("landed");
+  void landedTile.offsetWidth;
+  landedTile.classList.add("landed");
+ }
+
+ document.getElementById("phaseLabel").textContent="Tahap: menjelajahi petak";
+ playTone(520,.1);
  const type=pathTypes[team.pos];
  document.getElementById("rollStatus").textContent=`Dadu menunjukkan ${result}!`;
  document.getElementById("rollHelp").textContent=`${team.name} maju ke petak ${team.pos+1}: ${tileNames[type]}.`;
@@ -551,9 +624,35 @@ function roll(){
  document.getElementById("rollHelp").textContent += " Lanjutkan giliran setelah selesai.";
 }
 
+function learningFeedback(type,success){
+ const explanations={
+  knowledge:"Bahasa Indonesia menjadi bahasa persatuan yang membantu masyarakat dari berbagai daerah saling memahami. Kita dapat bangga menggunakannya sambil tetap menghargai bahasa daerah.",
+  situation:"Dalam situasi sehari-hari, gunakan bahasa Indonesia yang santun agar teman dari latar daerah berbeda dapat saling memahami. Jangan mengejek logat atau merendahkan bahasa daerah.",
+  action:"Saat mempraktikkan penggunaan bahasa Indonesia, tunjukkan sikap santun, percaya diri, dan menghargai lawan bicara.",
+  group:"Kerja sama membantu kelompok menyampaikan gagasan bersama. Setiap anggota perlu mendapat kesempatan berpendapat dan menghargai bahasa serta latar belakang temannya."
+ };
+ if(success)return explanations[type]||"Terus tunjukkan sikap bangga menggunakan bahasa Indonesia dan menghargai teman.";
+ return "Coba pikirkan kembali: apakah tindakan atau jawaban kalian membantu semua teman saling memahami, menggunakan bahasa yang santun, dan tetap menghargai bahasa daerah? Diskusikan bersama guru.";
+}
+
+function showFeedback(success,type){
+ const card=document.getElementById("challenge");
+ let box=document.getElementById("feedbackBox");
+ if(!box){
+  box=document.createElement("div");
+  box.id="feedbackBox";
+  card.appendChild(box);
+ }
+ box.hidden=false;
+ box.className="feedback"+(success?"":" try-again");
+ box.innerHTML=`<strong>${success?"🌟 Hebat! Tantangan berhasil.":"💡 Yuk, belajar dari tantangan ini."}</strong>${escapeHtml(learningFeedback(type,success))}`;
+}
+
 function judge(success){
  if(!activeChallenge)return;
  const team=teams[current];
+ const judgedType=activeChallenge.type;
+
  if(success){
   team.score+=activeChallenge.points;
   document.getElementById("rollStatus").textContent="Tantangan berhasil!";
@@ -562,7 +661,16 @@ function judge(success){
   document.getElementById("rollStatus").textContent="Tantangan belum berhasil";
   document.getElementById("rollHelp").textContent="Tidak ada poin yang ditambah atau dikurangi.";
  }
- renderScores();clearChallenge();finishTurn();
+
+ renderScores();
+ showFeedback(success,judgedType);
+ activeChallenge=null;
+ document.getElementById("successBtn").disabled=true;
+ document.getElementById("failBtn").disabled=true;
+ document.getElementById("judgeHelp").textContent="Baca umpan baliknya, lalu lanjutkan ke kelompok berikutnya.";
+ document.getElementById("phaseLabel").textContent=success?"Tahap: tantangan berhasil":"Tahap: refleksi dan umpan balik";
+ playTone(success?880:330,.18);
+ finishTurn();
 }
 
 function nextTurn(){
@@ -572,6 +680,7 @@ function nextTurn(){
  document.getElementById("rollBtn").disabled=false;
  document.getElementById("rollStatus").textContent="Giliran berikutnya";
  document.getElementById("rollHelp").textContent="Tekan tombol lempar dadu.";
+ document.getElementById("phaseLabel").textContent="Tahap: siap melempar dadu";
  renderScores();
 }
 
@@ -583,6 +692,7 @@ function resetGame(){
  document.getElementById("die").textContent="⚀";
  document.getElementById("rollStatus").textContent="Siap bermain!";
  document.getElementById("rollHelp").textContent="Tekan tombol lempar dadu.";
+ document.getElementById("phaseLabel").textContent="Tahap: siap memulai";
  document.getElementById("rollBtn").disabled=false;
  document.getElementById("nextBtn").disabled=true;
  clearChallenge();renderBoard();renderScores();setTimerFromInput();
@@ -619,6 +729,7 @@ function announceWinner(){
  document.getElementById("rollBtn").disabled=true;
  document.getElementById("nextBtn").disabled=true;
 }
+
 function buildNameInputs(){
  const box=document.getElementById("nameInputs");
  box.innerHTML="";
@@ -632,6 +743,13 @@ function buildNameInputs(){
 }
 
 document.getElementById("rollBtn").addEventListener("click",roll);
+document.getElementById("soundBtn").addEventListener("click",()=>{
+ soundEnabled=!soundEnabled;
+ const btn=document.getElementById("soundBtn");
+ btn.textContent=soundEnabled?"🔊 Suara: aktif":"🔇 Suara: mati";
+ btn.setAttribute("aria-pressed",String(soundEnabled));
+ if(soundEnabled)playTone(740,.15);
+});
 document.getElementById("nextBtn").addEventListener("click",nextTurn);
 document.getElementById("successBtn").addEventListener("click",()=>judge(true));
 document.getElementById("failBtn").addEventListener("click",()=>judge(false));
