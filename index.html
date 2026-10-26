@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jelajah Nusantara: Misi Bahasa Persatuan</title>
 <style>
-:root{--purple:#7442a7;--ink:#24304b;--cream:#fffaf0;--yellow:#ffd34f;--red:#f05a67;--blue:#3aa7df;--green:#39a978}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff7dc,#f1e8ff 55%,#e5f7ff);min-height:100vh}
-header{text-align:center;padding:24px 16px 14px}header .tag{display:inline-block;background:#fff;border:2px solid #e8d9ff;border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:800;color:var(--purple)}h1{margin:10px 0 4px;font-size:clamp(1.7rem,4vw,2.8rem);color:#50317c}header p{margin:0 auto;max-width:700px}
-main{max-width:1150px;margin:auto;padding:12px 16px 36px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:18px}.panel{background:#ffffffd9;border:1px solid #e8def4;border-radius:22px;padding:18px;box-shadow:0 8px 25px #47316b12}
+:root{--purple:#7442a7;--ink:#24304b;--cream:#fffaf0;--yellow:#ffd34f;--red:#f05a67;--blue:#3aa7df;--green:#39a978;--ocean:#69cce8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(180deg,#bcefff 0%,#e9f9ff 38%,#fff6d8 100%);min-height:100vh}
+header{text-align:center;padding:24px 16px 14px}header .tag{display:inline-block;background:#fff;border:2px solid #e8d9ff;border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:800;color:var(--purple)}h1{margin:10px 0 4px;font-size:clamp(1.9rem,5vw,3.3rem);color:#203b70;text-shadow:0 3px 0 #fff,0 5px 0 #f6d36b;letter-spacing:.02em}header p{margin:0 auto;max-width:700px;font-weight:650}
+main{max-width:1250px;margin:auto;padding:12px 16px 36px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:18px}.panel{background:#ffffffed;border:2px solid #fff;border-radius:24px;padding:18px;box-shadow:0 8px 25px #1b58701c}
 h2{font-size:1.15rem;margin:0 0 12px}.boardtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.turn{background:#f1e8ff;color:#563783;border-radius:12px;padding:8px 12px;font-weight:800}
-.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}.tile{min-height:86px;border-radius:15px;padding:7px 4px;text-align:center;border:2px solid #ffffff;box-shadow:inset 0 0 0 1px #00000012;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:.75rem;font-weight:800}.tile .num{font-size:.72rem;opacity:.65}.tile .emoji{font-size:1.35rem;line-height:1.5}.tile .tokens{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:1rem}.knowledge{background:#fff0a8}.situation{background:#ffd4d8}.action{background:#c9edff}.group{background:#e4d4ff}.bonus{background:#c8f1d9}.start{background:#dce8ff}.finish{background:#ffe2a6}
+.board{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(5,minmax(72px,auto));gap:6px;margin-top:14px;padding:10px;border:4px solid #fff;border-radius:22px;position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#8de1ed 0%,#55bfdc 56%,#329ac7 100%);box-shadow:inset 0 0 0 2px #c7f6ff,0 5px 0 #d5b27a}.board:before{content:'🌴  SUMATRA　　 🦜 KALIMANTAN　　 🏠 SULAWESI';position:absolute;z-index:-1;left:15%;right:15%;top:35%;height:30%;display:flex;align-items:center;justify-content:center;text-align:center;color:#285c47;font-size:clamp(.65rem,1.3vw,1rem);font-weight:900;line-height:3.3;background:radial-gradient(ellipse at 20% 50%,#91d77b 0 14%,transparent 15%),radial-gradient(ellipse at 48% 48%,#a5df7a 0 18%,transparent 19%),radial-gradient(ellipse at 78% 50%,#8bcf72 0 15%,transparent 16%);text-shadow:0 1px #fff}.tile{min-width:0;min-height:68px;border-radius:12px;padding:5px 2px;text-align:center;border:3px solid #fff;box-shadow:0 3px 0 #245d7b55,inset 0 0 0 1px #00000012;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:.68rem;font-weight:900}.tile .num{font-size:.62rem;opacity:.8}.tile .emoji{font-size:1.15rem;line-height:1.25}.tile .tokens{display:flex;gap:1px;flex-wrap:wrap;justify-content:center;font-size:.9rem}.knowledge{background:#fff0a8}.situation{background:#ffd4d8}.action{background:#c9edff}.group{background:#e4d4ff}.bonus{background:#c8f1d9}.start{background:#dce8ff}.finish{background:#ffe2a6}
 .legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.legend span{font-size:.72rem;border-radius:99px;padding:5px 8px;font-weight:700}
 button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;font-size:.94rem;cursor:pointer;transition:transform .12s,filter .12s}button:hover{filter:brightness(.97);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.primary{background:var(--purple);color:white}.secondary{background:#eee5fb;color:#50317c}.good{background:#d5f4df;color:#1d6d42}.warn{background:#ffe4e6;color:#9c2835}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.dicebox{display:flex;align-items:center;gap:14px;margin:14px 0}.die{height:62px;width:62px;border-radius:16px;background:white;box-shadow:0 4px 0 #d8d1e4;display:grid;place-items:center;font-size:2.2rem}.scorelist{display:grid;gap:8px}.score{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:13px;background:#f8f5ff;border:1px solid #e8e0f4}.score.active{outline:2px solid var(--purple);background:#f0e6ff}.score strong{font-size:1rem}.score small{display:block;color:#6b6880}.card{border-radius:18px;padding:16px;margin-top:12px;background:#fff;border:2px solid #e5daf5;min-height:175px}.card .type{font-weight:900;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--purple)}.card .prompt{font-size:1.08rem;line-height:1.5;font-weight:750;margin:10px 0}.card .points{display:inline-block;background:#f2e8ff;color:#603a8d;border-radius:99px;padding:5px 10px;font-weight:900;font-size:.8rem}.small{font-size:.82rem;color:#66647a}.timer{font-size:1.45rem;font-weight:900;color:#50317c}.section{margin-top:18px}.field{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.field input{padding:10px;border:1px solid #d8cee7;border-radius:10px;min-width:0;flex:1}.notice{background:#fff5d7;border-radius:12px;padding:10px 12px;font-size:.83rem;margin-top:12px}.footer{text-align:center;padding:0 16px 24px;font-size:.8rem;color:#69627a}
-@media(max-width:850px){main{grid-template-columns:1fr}.tile{min-height:72px}.board{gap:5px}.tile .emoji{font-size:1.1rem}.panel{padding:14px}}
-@media(max-width:420px){.tile{font-size:.65rem;min-height:65px}.tile .tokens{font-size:.8rem}}
+@media(max-width:850px){main{grid-template-columns:1fr}.tile{min-height:58px}.board{gap:4px;padding:6px;grid-template-rows:repeat(5,minmax(58px,auto))}.tile .emoji{font-size:1rem}.panel{padding:14px}}
+@media(max-width:520px){.board{gap:3px;padding:4px;grid-template-rows:repeat(5,minmax(48px,auto))}.tile{font-size:.55rem;min-height:48px;border-width:2px;border-radius:8px;padding:3px 1px}.tile .num{font-size:.5rem}.tile .emoji{font-size:.85rem}.tile .tokens{font-size:.65rem}.board:before{left:12%;right:12%;font-size:.55rem}}
 </style>
 </head>
 <body>
@@ -26,7 +26,7 @@ button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;font-size:.
 <main>
 <section class="panel">
 <div class="boardtop"><h2>🗺️ Papan Permainan</h2><div class="turn" id="turnLabel">Giliran: Kelompok 1</div></div>
-<p class="small">Empat kelompok bermain bergiliran pada satu papan. Lempar dadu, gerakkan pion, lalu selesaikan tantangan sesuai petak.</p>
+<p class="small">Lima kelompok menjelajahi Nusantara secara bergiliran. Lempar dadu, gerakkan pion, lalu selesaikan tantangan sesuai petak.</p>
 <div class="board" id="board"></div>
 <div class="legend">
 <span class="knowledge">💡 Pengetahuan · 10</span><span class="situation">🗣️ Situasi · 10</span><span class="action">🎭 Aksi · 10</span><span class="group">🤝 Kelompok · 15</span><span class="bonus">⭐ Bonus · +5</span>
@@ -55,7 +55,7 @@ button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;font-size:.
 </div>
 </aside>
 </main>
-<div class="footer">Draf game interaktif untuk pembelajaran Pendidikan Pancasila • Bisa dimainkan secara lokal di browser.</div>
+<div class="footer">Jelajah Nusantara • Game interaktif Pendidikan Pancasila kelas IV SD</div>
 <script>
 const types={
  knowledge:{label:"Soal Pengetahuan",points:10,cls:"knowledge",emoji:"💡",cards:[
@@ -110,7 +110,7 @@ cards:[
 "Setiap anggota kelompok menyebutkan satu tindakan nyata yang akan dilakukan untuk menunjukkan kebanggaan menggunakan bahasa Indonesia di lingkungan sekitar."
 ]}
 };
-const teamColors=["#3978d4","#e95a65","#28a879","#9a63cf"];
+const teamColors=["#3978d4","#e95a65","#28a879","#9a63cf","#e7a52b"];
 
 let teams=[{name:"Kelompok 1",pos:0,score:0},{name:"Kelompok 2",pos:0,score:0},{name:"Kelompok 3",pos:0,score:0},{name:"Kelompok 4",pos:0,score:0},{name:"Kelompok 5",pos:0,score:0}];
 let current=0, waiting=false, activeChallenge=null, deckUsed={}, timerSeconds=1200, timerInterval=null, timerRunning=false, turnCount=0;
@@ -118,8 +118,8 @@ const pathTypes=["start","knowledge","situation","action","group","knowledge","b
 const tileNames={start:"MULAI",knowledge:"Pengetahuan",situation:"Situasi",action:"Aksi",group:"Tantangan",bonus:"Bonus",finish:"FINISH"};
 const tileEmojis={start:"🚩",knowledge:"💡",situation:"🗣️",action:"🎭",group:"🤝",bonus:"⭐",finish:"🏁"};
 const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
-function renderBoard(){const board=document.getElementById("board");board.innerHTML="";pathTypes.forEach((type,i)=>{const t=document.createElement("div");t.className="tile "+type;t.innerHTML=`<span class="num">PETAK ${i+1}</span><span class="emoji">${tileEmojis[type]}</span><span>${tileNames[type]}</span><div class="tokens" id="tokens-${i}"></div>`;board.appendChild(t)});renderTokens()}
-function renderTokens(){pathTypes.forEach((_,i)=>{let el=document.getElementById("tokens-"+i);if(el)el.innerHTML=""});teams.forEach((team,i)=>{let el=document.getElementById("tokens-"+team.pos);if(el){let token=document.createElement("span");token.textContent=["🔵","🔴","🟢","🟣"][i];token.title=team.name;el.appendChild(token)}})}
+function renderBoard(){const board=document.getElementById("board");board.innerHTML="";pathTypes.forEach((type,i)=>{const t=document.createElement("div");t.className="tile "+type;t.style.gridColumn=([1,2,3,4,5,6,7,7,7,7,7,6,5,4,3,2,1,1,1,1][i]);t.style.gridRow=([1,1,1,1,1,1,1,2,3,4,5,5,5,5,5,5,5,4,3,2][i]);t.innerHTML=`<span class="num">PETAK ${i+1}</span><span class="emoji">${tileEmojis[type]}</span><span>${tileNames[type]}</span><div class="tokens" id="tokens-${i}"></div>`;board.appendChild(t)});renderTokens()}
+function renderTokens(){pathTypes.forEach((_,i)=>{let el=document.getElementById("tokens-"+i);if(el)el.innerHTML=""});teams.forEach((team,i)=>{let el=document.getElementById("tokens-"+team.pos);if(el){let token=document.createElement("span");token.textContent=["🔵","🔴","🟢","🟣","🟡"][i];token.title=team.name;el.appendChild(token)}})}
 function renderScores(){const box=document.getElementById("scores");box.innerHTML="";teams.forEach((t,i)=>{const d=document.createElement("div");d.className="score"+(i===current?" active":"");d.innerHTML=`<div><strong><span style="color:${teamColors[i]}">●</span> ${escapeHtml(t.name)}</strong><small>Posisi: ${t.pos+1} / ${pathTypes.length}</small></div><strong>${t.score} poin</strong>`;box.appendChild(d)});document.getElementById("turnLabel").textContent="Giliran: "+teams[current].name}
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function drawCard(type){const arr=types[type].cards;let used=deckUsed[type]||[];if(used.length>=arr.length)used=[];let available=arr.map((_,i)=>i).filter(i=>!used.includes(i));let index=available[Math.floor(Math.random()*available.length)];used.push(index);deckUsed[type]=used;return arr[index]}
