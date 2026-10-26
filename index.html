@@ -334,57 +334,78 @@ document.getElementById("progressTrack").setAttribute("aria-valuenow",team.pos+1
 let soundEnabled=false;
 let audioContext=null;
 
-function playTone(frequency=600,duration=.12){
-if(!soundEnabled)return;
+/* MEMASTIKAN AUDIO BROWSER SIAP */
+async function prepareAudio(){
+if(!soundEnabled)return false;
 try{
-audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
-if(audioContext.state==="suspended")audioContext.resume();
-const oscillator=audioContext.createOscillator();
-const gain=audioContext.createGain();
-oscillator.frequency.value=frequency;
-oscillator.type="sine";
-gain.gain.setValueAtTime(.16,audioContext.currentTime);
-gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);
-oscillator.connect(gain);gain.connect(audioContext.destination);
-oscillator.start();oscillator.stop(audioContext.currentTime+duration);
-}catch(e){console.warn("Suara tidak dapat diputar",e);}
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+if(!AudioCtx)return false;
+if(!audioContext)audioContext=new AudioCtx();
+if(audioContext.state==="suspended")await audioContext.resume();
+return audioContext.state==="running";
+}catch(e){
+console.warn("Audio tidak dapat diaktifkan:",e);
+return false;
 }
 
-function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
-
-function playStepSound(step){
+/* BUNYI AUDIO LEBIH JELAS */
+async function playTone(frequency=600,duration=.16){
 if(!soundEnabled)return;
 try{
-audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
-if(audioContext.state==="suspended")audioContext.resume();
+if(!await prepareAudio())return;
+const now=audioContext.currentTime;
+const oscillator=audioContext.createOscillator();
+const gain=audioContext.createGain();
+oscillator.type="sine";
+oscillator.frequency.setValueAtTime(frequency,now);
+gain.gain.setValueAtTime(.001,now);
+gain.gain.linearRampToValueAtTime(.24,now+.015);
+gain.gain.exponentialRampToValueAtTime(.001,now+duration);
+oscillator.connect(gain);
+gain.connect(audioContext.destination);
+oscillator.start(now);
+oscillator.stop(now+duration+.02);
+}catch(e){console.warn("Bunyi tidak dapat diputar:",e);}
+}
+
+/* BUNYI SETIAP LANGKAH PION */
+async function playStepSound(step){
+if(!soundEnabled)return;
+try{
+if(!await prepareAudio())return;
 const now=audioContext.currentTime;
 const osc=audioContext.createOscillator();
 const gain=audioContext.createGain();
 osc.type="triangle";
-osc.frequency.setValueAtTime(step%2===0?360:460,now);
-osc.frequency.exponentialRampToValueAtTime(190,now+.19);
+osc.frequency.setValueAtTime(step%2===0?560:430,now);
+osc.frequency.exponentialRampToValueAtTime(260,now+.16);
 gain.gain.setValueAtTime(.001,now);
-gain.gain.linearRampToValueAtTime(.28,now+.025);
-gain.gain.exponentialRampToValueAtTime(.001,now+.22);
-osc.connect(gain);gain.connect(audioContext.destination);
-osc.start(now);osc.stop(now+.23);
-}catch(e){console.warn("Bunyi langkah tidak dapat diputar",e);}
+gain.gain.linearRampToValueAtTime(.34,now+.02);
+gain.gain.exponentialRampToValueAtTime(.001,now+.2);
+osc.connect(gain);
+gain.connect(audioContext.destination);
+osc.start(now);
+osc.stop(now+.22);
+}catch(e){console.warn("Bunyi langkah tidak dapat diputar:",e);}
 }
 
-/* PEMBACA JAWABAN YANG DIPERBAIKI */
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+
+/* PEMBACA JAWABAN */
 function speakText(text){
 if(!soundEnabled){
 document.getElementById("rollHelp").textContent="Aktifkan tombol Suara terlebih dahulu agar jawaban dibacakan.";
 return;
 }
 if(!("speechSynthesis" in window)){
-document.getElementById("rollHelp").textContent="Browser ini tidak mendukung pembaca suara. Coba Chrome atau Edge.";
+document.getElementById("rollHelp").textContent="Browser tidak mendukung pembaca suara. Coba Chrome atau Edge.";
 return;
 }
 const synth=window.speechSynthesis;
+synth.cancel();
 const utterance=new SpeechSynthesisUtterance(String(text));
 utterance.lang="id-ID";
-utterance.rate=.85;
+utterance.rate=.88;
 utterance.pitch=1;
 utterance.volume=1;
 const voices=synth.getVoices();
@@ -392,16 +413,15 @@ const indonesianVoice=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith("id
 if(indonesianVoice)utterance.voice=indonesianVoice;
 utterance.onerror=function(event){
 console.warn("Pembaca jawaban gagal:",event.error);
-document.getElementById("rollHelp").textContent="Suara jawaban gagal diputar. Coba tekan Dengarkan jawaban lagi.";
+document.getElementById("rollHelp").textContent="Jika jawaban belum terdengar, tekan Dengarkan jawaban lagi.";
 };
-synth.cancel();
-synth.resume();
-setTimeout(function(){
-if(soundEnabled){
+setTimeout(()=>{
+if(!soundEnabled)return;
+try{
 synth.resume();
 synth.speak(utterance);
-}
-},150);
+}catch(e){console.warn("Pembaca jawaban tidak dapat dijalankan:",e);}
+},250);
 }
 
 function renderScores(){
@@ -423,7 +443,8 @@ let used=deckUsed[type]||[];
 if(used.length>=arr.length)used=[];
 const available=arr.map((_,i)=>i).filter(i=>!used.includes(i));
 const index=available[Math.floor(Math.random()*available.length)];
-used.push(index);deckUsed[type]=used;
+used.push(index);
+deckUsed[type]=used;
 return{prompt:arr[index],index};
 }
 
@@ -453,28 +474,49 @@ async function roll(){
 if(waiting)return;
 waiting=true;
 document.getElementById("rollBtn").disabled=true;
+
+/* Bangunkan audio melalui klik pengguna sebelum efek suara */
+if(soundEnabled)await prepareAudio();
+
 const result=Math.floor(Math.random()*6)+1;
 const die=document.getElementById("die");
 die.textContent=diceFaces[result-1];
-die.classList.remove("rolling");void die.offsetWidth;die.classList.add("rolling");
+die.classList.remove("rolling");
+void die.offsetWidth;
+die.classList.add("rolling");
+
+/* Bunyi dadu berupa beberapa nada pendek */
+if(soundEnabled){
+playTone(520,.12);
+setTimeout(()=>playTone(720,.12),100);
+}
+
 const team=teams[current];
 const startPos=team.pos;
 const targetPos=Math.min(startPos+result,pathTypes.length-1);
 document.getElementById("rollStatus").textContent=`Dadu menunjukkan ${result}!`;
 document.getElementById("rollHelp").textContent=`${team.name} sedang bergerak...`;
 clearChallenge();
-playTone(520,.1);
+
 for(let pos=startPos+1;pos<=targetPos;pos++){
 team.pos=pos;
-renderTokens();renderScores();playStepSound(pos);
+renderTokens();
+renderScores();
+playStepSound(pos);
 await sleep(600);
 }
+
 const landedTile=document.querySelectorAll(".tile")[team.pos];
-if(landedTile){landedTile.classList.remove("landed");void landedTile.offsetWidth;landedTile.classList.add("landed");}
+if(landedTile){
+landedTile.classList.remove("landed");
+void landedTile.offsetWidth;
+landedTile.classList.add("landed");
+}
 document.getElementById("phaseLabel").textContent="Tahap: menjelajahi petak";
 const type=pathTypes[team.pos];
 document.getElementById("rollStatus").textContent=`Dadu menunjukkan ${result}!`;
 document.getElementById("rollHelp").textContent=`${team.name} maju ke petak ${team.pos+1}: ${tileNames[type]}.`;
+
 if(type==="start"){
 document.getElementById("challenge").innerHTML='<div class="type">🚩 Petak Mulai</div><div class="prompt">Semangat! Lanjutkan perjalanan untuk mengumpulkan poin.</div>';
 finishTurn();
@@ -482,14 +524,17 @@ finishTurn();
 document.getElementById("challenge").innerHTML='<div class="type">🏁 Garis Akhir</div><div class="prompt">Kamu mencapai garis akhir! Permainan tetap dilanjutkan sampai waktu habis. Poin tertinggi menentukan pemenang.</div>';
 finishTurn();
 }else if(type==="bonus"){
-team.score+=5;renderScores();
+team.score+=5;
+renderScores();
 document.getElementById("challenge").innerHTML='<div class="type">⭐ Petak Bonus</div><div class="prompt">Hebat! Kamu mendapatkan bonus semangat Nusantara.</div><span class="points">+5 poin otomatis</span>';
-playTone(880,.18);finishTurn();
+playTone(880,.2);
+finishTurn();
 }else{
 const drawn=drawCard(type);
 showChallenge(type,drawn.prompt,drawn.index);
 }
 document.getElementById("rollHelp").textContent+=" Lanjutkan giliran setelah selesai.";
+waiting=false;
 }
 
 function learningFeedback(type,success,cardIndex){
@@ -498,18 +543,32 @@ if(answer)return answer;
 return"Bahasa Indonesia membantu kita saling memahami. Gunakan bahasa yang santun, percaya diri, dan tetap menghargai bahasa daerah.";
 }
 
-/* UMPAN BALIK + TOMBOL PEMBACAAN ULANG */
+/* UMPAN BALIK DAN SUARA JAWABAN */
 function showFeedback(success,type,cardIndex){
 const card=document.getElementById("challenge");
 let box=document.getElementById("feedbackBox");
-if(!box){box=document.createElement("div");box.id="feedbackBox";card.appendChild(box);}
+if(!box){
+box=document.createElement("div");
+box.id="feedbackBox";
+card.appendChild(box);
+}
 box.hidden=false;
 box.className="feedback"+(success?"":" try-again");
+
 const answer=learningFeedback(type,success,cardIndex);
-box.innerHTML=`<strong>${success?"🌟 Hebat! Tantangan berhasil.":"💡 Ini contoh jawaban yang benar."}</strong><div>${escapeHtml(answer)}</div><button type="button" class="secondary" id="replayAnswerBtn" style="margin-top:10px">🔊 Dengarkan jawaban lagi</button>`;
-document.getElementById("replayAnswerBtn").addEventListener("click",function(){speakText(answer);});
+box.innerHTML=`
+<strong>${success?"🌟 Hebat! Tantangan berhasil.":"💡 Yuk, pelajari bersama."}</strong>
+<div>${escapeHtml(answer)}</div>
+<button type="button" class="secondary" id="replayAnswerBtn" style="margin-top:10px">🔊 Dengarkan jawaban lagi</button>`;
+
+document.getElementById("replayAnswerBtn").addEventListener("click",()=>{
+speakText(success?"Hebat, tantangan berhasil. "+answer:"Ayo kita pelajari bersama. "+answer);
+});
+
+/* Langsung baca keberhasilan, lalu isi jawaban.
+   Tidak memakai kalimat "contoh jawaban yang benar adalah". */
 if(soundEnabled){
-speakText((success?"Hebat! Tantangan berhasil. Contoh jawaban yang benar adalah: ":"Contoh jawaban yang benar adalah: ")+answer);
+speakText(success?"Hebat, tantangan berhasil. "+answer:"Ayo kita pelajari bersama. "+answer);
 }
 }
 
@@ -518,6 +577,7 @@ if(!activeChallenge)return;
 const team=teams[current];
 const judgedType=activeChallenge.type;
 const cardIndex=activeChallenge.cardIndex;
+
 if(success){
 team.score+=activeChallenge.points;
 document.getElementById("rollStatus").textContent="Tantangan berhasil!";
@@ -526,14 +586,15 @@ document.getElementById("rollHelp").textContent=`${team.name} mendapat ${activeC
 document.getElementById("rollStatus").textContent="Tantangan belum berhasil";
 document.getElementById("rollHelp").textContent="Tidak ada poin yang ditambah atau dikurangi.";
 }
+
 renderScores();
 showFeedback(success,judgedType,cardIndex);
 activeChallenge=null;
 document.getElementById("successBtn").disabled=true;
 document.getElementById("failBtn").disabled=true;
-document.getElementById("judgeHelp").textContent="Dengarkan atau baca contoh jawaban, lalu lanjutkan ke kelompok berikutnya.";
+document.getElementById("judgeHelp").textContent="Dengarkan atau baca jawaban, lalu lanjutkan ke kelompok berikutnya.";
 document.getElementById("phaseLabel").textContent=success?"Tahap: tantangan berhasil":"Tahap: refleksi dan umpan balik";
-playTone(success?880:330,.18);
+playTone(success?880:330,.2);
 finishTurn();
 }
 
@@ -552,21 +613,29 @@ renderScores();
 function resetGame(){
 if("speechSynthesis" in window)window.speechSynthesis.cancel();
 if(timerInterval)clearInterval(timerInterval);
-timerInterval=null;timerRunning=false;
+timerInterval=null;
+timerRunning=false;
 teams.forEach(t=>{t.pos=0;t.score=0;});
-current=0;waiting=false;activeChallenge=null;deckUsed={};
+current=0;
+waiting=false;
+activeChallenge=null;
+deckUsed={};
 document.getElementById("die").textContent="⚀";
 document.getElementById("rollStatus").textContent="Siap bermain!";
 document.getElementById("rollHelp").textContent="Tekan tombol lempar dadu.";
 document.getElementById("phaseLabel").textContent="Tahap: siap memulai";
 document.getElementById("rollBtn").disabled=false;
 document.getElementById("nextBtn").disabled=true;
-clearChallenge();renderBoard();renderScores();setTimerFromInput();
+clearChallenge();
+renderBoard();
+renderScores();
+setTimerFromInput();
 }
 
 function setTimerFromInput(){
 const mins=Math.max(1,Math.min(90,Number(document.getElementById("minutes").value)||20));
-timerSeconds=mins*60;showClock();
+timerSeconds=mins*60;
+showClock();
 }
 
 function showClock(){
@@ -579,8 +648,15 @@ if(timerInterval)clearInterval(timerInterval);
 if(!timerRunning&&timerSeconds<=0)setTimerFromInput();
 timerRunning=true;
 timerInterval=setInterval(()=>{
-if(timerSeconds>0){timerSeconds--;showClock();}
-else{clearInterval(timerInterval);timerInterval=null;timerRunning=false;announceWinner();}
+if(timerSeconds>0){
+timerSeconds--;
+showClock();
+}else{
+clearInterval(timerInterval);
+timerInterval=null;
+timerRunning=false;
+announceWinner();
+}
 },1000);
 }
 
@@ -606,18 +682,22 @@ box.appendChild(row);
 
 document.getElementById("rollBtn").addEventListener("click",roll);
 
-document.getElementById("soundBtn").addEventListener("click",()=>{
+document.getElementById("soundBtn").addEventListener("click",async()=>{
 soundEnabled=!soundEnabled;
 const btn=document.getElementById("soundBtn");
 btn.textContent=soundEnabled?"🔊 Suara: aktif":"🔇 Suara: mati";
 btn.setAttribute("aria-pressed",String(soundEnabled));
+
 if(soundEnabled){
-try{
-audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
-if(audioContext.state==="suspended")audioContext.resume();
-}catch(e){}
-playTone(740,.15);
-document.getElementById("rollHelp").textContent="Suara aktif. Bunyi langkah pion dan pembaca jawaban akan terdengar saat bermain.";
+const ready=await prepareAudio();
+if(ready){
+/* Bunyi uji supaya pengguna tahu audio sudah aktif */
+await playTone(660,.15);
+setTimeout(()=>playTone(880,.18),160);
+document.getElementById("rollHelp").textContent="Suara aktif! Bunyi dadu, langkah pion, dan pembaca jawaban siap digunakan.";
+}else{
+document.getElementById("rollHelp").textContent="Audio belum tersedia. Periksa volume perangkat dan izin suara browser.";
+}
 }else{
 if("speechSynthesis" in window)window.speechSynthesis.cancel();
 document.getElementById("rollHelp").textContent="Suara dimatikan.";
@@ -627,12 +707,17 @@ document.getElementById("rollHelp").textContent="Suara dimatikan.";
 document.getElementById("nextBtn").addEventListener("click",nextTurn);
 document.getElementById("successBtn").addEventListener("click",()=>judge(true));
 document.getElementById("failBtn").addEventListener("click",()=>judge(false));
-document.getElementById("resetBtn").addEventListener("click",()=>{if(confirm("Mulai ulang permainan dan menghapus skor?"))resetGame();});
-document.getElementById("minutes").addEventListener("change",()=>{if(!timerRunning)setTimerFromInput();});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+if(confirm("Mulai ulang permainan dan menghapus skor?"))resetGame();
+});
+document.getElementById("minutes").addEventListener("change",()=>{
+if(!timerRunning)setTimerFromInput();
+});
 document.getElementById("startTimer").addEventListener("click",startTimer);
 document.getElementById("pauseTimer").addEventListener("click",()=>{
 if(timerInterval)clearInterval(timerInterval);
-timerInterval=null;timerRunning=false;
+timerInterval=null;
+timerRunning=false;
 });
 document.getElementById("saveNames").addEventListener("click",()=>{
 teams.forEach((t,i)=>{
