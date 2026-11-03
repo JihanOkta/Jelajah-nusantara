@@ -445,7 +445,7 @@ playTone(680,.18);
 for(let pos=startPos+1;pos<=targetPos;pos++){
 if(timerSeconds===0)return;
 team.pos=pos;renderTokens();renderScores();playStepSound(pos);
-await sleep(600);
+await sleep(1500);
 }
 const landedTile=document.querySelectorAll(".tile")[team.pos];
 if(landedTile){landedTile.classList.remove("landed");void landedTile.offsetWidth;landedTile.classList.add("landed");}
