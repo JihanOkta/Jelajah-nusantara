@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jelajah Nusantara: Misi Bahasa Persatuan</title>
+<title>Jelajah Nusantara: Misi Keberagaman</title>
 <style>
 :root{--ungu:#7144a5;--biru:#258db5;--kuning:#ffdc58;--merah:#ff929f;--hijau:#83dda0;--birumuda:#8bd8f3;--tinta:#253b54}
 *{box-sizing:border-box}
@@ -89,13 +89,25 @@ button:hover:not(:disabled){filter:brightness(.96)}
 .footer{text-align:center;padding:0 16px 25px;font-size:12px;color:#69627a}
 @media(max-width:900px){main{grid-template-columns:1fr}.board{grid-template-rows:repeat(5,minmax(78px,auto));gap:5px;padding:8px}.tile{min-height:70px}}
 @media(max-width:520px){main{padding:8px}.panel{padding:12px}.board{gap:3px;padding:5px;grid-template-rows:repeat(5,minmax(53px,auto));border-width:3px}.tile{min-height:50px;border-width:2px;border-radius:10px;padding:3px 1px;font-size:8px}.tile .num{font-size:7px}.tile .emoji{font-size:16px}.tile .tokens{font-size:11px}.board-center{border-width:2px;border-radius:18px;padding:3px}.center-title{font-size:11px}.center-sub,.map-note{font-size:8px}.map{max-height:150px}.island-label{font-size:12px;stroke-width:2.5px}.legend{grid-template-columns:1fr}.people{font-size:18px}}
+
+.recap-section{margin:24px 18px 30px;max-width:1414px;margin-left:auto;margin-right:auto}
+.recap-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.recap-team{background:#fbfaff;border:2px solid #e5daf5;border-radius:16px;padding:14px;min-width:0}
+.recap-team h3{margin:0 0 10px;font-size:16px}
+.recap-team label{display:block;font-size:12px;font-weight:bold;margin:9px 0 5px}
+.recap-team textarea{width:100%;min-height:62px;border:1px solid #d8cee7;border-radius:10px;padding:9px;font:inherit;font-size:13px;resize:vertical}
+.recap-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.recap-status{font-size:12px;color:#28734b;margin-top:7px}
+@media(max-width:650px){.recap-section{margin:16px 8px 24px}.recap-grid{grid-template-columns:1fr}}
+
+@media print{body{background:white}header,.panel:not(.recap-section),.footer{display:none!important}.recap-section{margin:0!important;max-width:none!important;box-shadow:none!important;border:0!important}.recap-team{break-inside:avoid}.recap-actions{display:none!important}.recap-team textarea{min-height:55px}}
 </style>
 </head>
 <body>
 <header>
 <div class="tag">🎲 GAME EDUKASI • KELAS IV SD</div>
 <h1>Jelajah Nusantara</h1>
-<p><strong>Misi Bahasa Persatuan</strong> — belajar bangga menggunakan bahasa Indonesia dan menghargai bahasa daerah.</p>
+<p><strong>Misi Keberagaman Nusantara</strong> — mengenal keberagaman suku, agama, ras, adat, dan budaya serta belajar saling menghargai.</p>
 </header>
 <main>
 <section class="panel">
@@ -126,7 +138,7 @@ button:hover:not(:disabled){filter:brightness(.96)}
 <button class="secondary" id="nextBtn" disabled>Lanjut ke Kelompok Berikutnya →</button>
 <button class="warn" id="resetBtn">Mulai Ulang</button>
 </div>
-<div class="notice">💡 Guru menilai jawaban atau peragaan untuk Kartu Situasi, Kartu Aksi, dan Tantangan Kelompok. Klik “Berhasil” jika tantangan berhasil. Jika belum berhasil, tidak ada poin yang ditambah atau dikurangi.</div>
+<div class="notice">💡 Guru menilai jawaban dan diskusi kelompok. Untuk Kartu Situasi dan Kartu Aksi, utamakan alasan, perasaan, sikap, serta rencana tindakan siswa. Klik “Berhasil” jika kelompok menunjukkan pemahaman yang sesuai.</div>
 </section>
 <aside class="panel">
 <h2>🏆 Papan Skor</h2><div class="scorelist" id="scores"></div>
@@ -143,107 +155,121 @@ button:hover:not(:disabled){filter:brightness(.96)}
 <div class="section"><h2>✏️ Nama Kelompok</h2><div id="nameInputs"></div><button class="secondary" id="saveNames" style="margin-top:8px">Simpan Nama</button></div>
 </aside>
 </main>
+
+<section class="panel recap-section" id="actionRecap">
+  <div class="boardtop"><h2>📝 Rekap Rencana Aksi Setiap Kelompok</h2><span class="phase-pill">Hasil akhir permainan</span></div>
+  <p class="small">Setelah permainan, setiap kelompok mengisi refleksi dan menyusun rencana aksi berdasarkan kartu-kartu yang telah didiskusikan selama bermain. Rencana aksi setiap kelompok boleh berbeda.</p>
+  <div class="notice">Panduan: selama permainan, kelompok cukup berdiskusi dan menjawab kartu secara lisan. Tidak perlu mencatat jawaban setiap kartu. Setelah permainan, diskusikan kembali pengalaman bermain untuk mengisi refleksi dan rencana aksi kelompok.</div>
+  <div class="recap-grid" id="recapGrid"></div>
+  <div class="recap-actions">
+    <button class="primary" id="saveRecapBtn">💾 Simpan Rekap</button>
+    <button class="secondary" id="printRecapBtn">🖨️ Cetak Rekap</button>
+    <button class="secondary" id="clearRecapBtn">Hapus Isian Rekap</button>
+  </div>
+  <p class="recap-status" id="recapStatus" aria-live="polite">Isian refleksi dan rencana aksi tersimpan di halaman ini. Klik Simpan Rekap agar tersimpan di browser ini.</p>
+</section>
+
 <div class="footer">Jelajah Nusantara • Game interaktif Pendidikan Pancasila kelas IV SD</div>
 <script>
 const types = {
 knowledge:{label:"Kartu Pengetahuan",points:10,cls:"knowledge",emoji:"💡",cards:[
-"Mengapa kita perlu bangga menggunakan bahasa Indonesia sebagai bahasa persatuan?",
-"Sebutkan dua contoh sikap bangga menggunakan bahasa Indonesia di lingkungan sekolah!",
-"Bagaimana cara menunjukkan kebanggaan terhadap bahasa Indonesia saat bermain bersama teman?",
-"Mengapa kita perlu menggunakan bahasa Indonesia ketika berbicara dengan teman dari daerah berbeda?",
-"Sebutkan dua kegiatan di lingkungan sekitar yang dapat dilakukan menggunakan bahasa Indonesia!",
-"Bagaimana cara menggunakan bahasa Indonesia yang baik dan santun ketika berbicara dengan tetangga?",
-"Apa yang dapat kamu lakukan untuk menunjukkan kebanggaan terhadap bahasa Indonesia saat berdiskusi?",
-"Mengapa kita perlu menghargai teman yang memiliki logat bahasa Indonesia berbeda?",
-"Bagaimana cara menunjukkan sikap bangga menggunakan bahasa Indonesia saat mengikuti kegiatan masyarakat?",
-"Sebutkan tiga perilaku yang menunjukkan kebanggaanmu sebagai anak Indonesia yang memiliki bahasa Indonesia sebagai bahasa persatuan!"
+"Apa yang dimaksud dengan keberagaman suku bangsa? Sebutkan dua contoh suku bangsa di Indonesia.",
+"Mengapa pakaian adat setiap daerah memiliki ciri khas yang berbeda? Berikan satu contoh pakaian adat beserta daerah asalnya.",
+"Sebutkan dua contoh tradisi atau upacara adat di Indonesia dan daerah asalnya.",
+"Apa yang dimaksud dengan bahasa daerah? Mengapa bahasa daerah perlu dilestarikan?",
+"Sebutkan enam agama yang diakui di Indonesia. Mengapa kita perlu menghormati teman yang berbeda agama?",
+"Apa yang dimaksud dengan ras? Mengapa perbedaan ciri fisik tidak boleh menjadi alasan untuk membeda-bedakan teman?",
+"Apa arti Bhinneka Tunggal Ika? Berikan satu contoh penerapannya di sekolah.",
+"Bagaimana keberagaman suku, agama, dan ras dapat menjadi kekayaan bangsa Indonesia?",
+"Jika temanmu memiliki kebiasaan budaya yang berbeda, bagaimana cara menunjukkan sikap menghargainya? Sebutkan dua contoh.",
+"Mengapa persatuan tetap penting meskipun masyarakat Indonesia memiliki suku, agama, ras, dan budaya yang beragam?"
 ]},
 situation:{label:"Kartu Situasi",points:10,cls:"situation",emoji:"🗣️",cards:[
-"Kamu bertemu teman baru dari daerah lain di lingkungan tempat tinggalmu. Bagaimana kamu memulai percakapan dengannya?",
-"Saat bermain, teman-temanmu menggunakan bahasa daerah yang tidak dipahami salah satu teman. Apa yang sebaiknya kamu lakukan?",
-"Seorang teman mengejek logat bahasa Indonesia teman lainnya. Bagaimana sikapmu?",
-"Kamu diminta menyampaikan pendapat dalam kegiatan kerja kelompok. Bagaimana kamu menyampaikannya?",
-"Kamu bertemu tetangga dari daerah berbeda dan ingin berkenalan. Bahasa apa yang dapat kamu gunakan? Jelaskan alasanmu.",
-"Temanmu merasa malu menggunakan bahasa Indonesia karena takut salah berbicara. Apa yang akan kamu katakan kepadanya?",
-"Saat berdiskusi, temanmu menyampaikan pendapat dengan bahasa yang kurang santun. Bagaimana kamu menyikapinya?",
-"Kamu mengikuti kegiatan bersama anak-anak dari berbagai daerah. Bagaimana kamu menggunakan bahasa Indonesia agar semua saling memahami?",
-"Seorang teman mengatakan bahwa menggunakan bahasa Indonesia tidak perlu dibanggakan. Bagaimana kamu menanggapinya?",
-"Kamu melihat teman mengejek temannya yang kesulitan berbicara bahasa Indonesia. Apa yang sebaiknya kamu lakukan?"
+"Ceritakan pengalamanmu ketika bertemu atau bermain dengan teman yang memiliki kebiasaan budaya berbeda. Bagaimana perasaanmu saat itu?",
+"Pernahkah kamu melihat seseorang diejek karena warna kulit, bentuk rambut, atau asal daerahnya? Jika pernah, bagaimana perasaanmu dan apa yang kamu lakukan?",
+"Saat kerja kelompok, ada teman yang tidak diajak bergabung karena berbeda suku. Menurutmu, bagaimana perasaan teman tersebut? Apa yang seharusnya dilakukan?",
+"Ceritakan pengalaman ketika kamu melihat atau mengikuti tradisi budaya yang berbeda dari kebiasaan keluargamu. Apa hal baru yang kamu pelajari?",
+"Temanmu sedang menjalankan ibadah, sedangkan teman lain mengajaknya bermain. Bagaimana sebaiknya mereka bersikap? Jelaskan alasanmu.",
+"Kamu memiliki teman yang berbicara dengan logat daerah yang berbeda. Bagaimana sikapmu ketika mendengarnya? Mengapa?",
+"Pernahkah kamu bekerja sama dengan teman yang berbeda agama, suku, atau budaya? Ceritakan pengalaman dan perasaanmu.",
+"Jika ada teman yang tidak memahami kebiasaan adat daerahmu, bagaimana kamu menjelaskannya agar ia merasa nyaman?",
+"Bayangkan kamu menjadi murid baru di kelas yang teman-temannya memiliki latar belakang berbeda. Sikap seperti apa yang kamu harapkan dari mereka?",
+"Setelah mempelajari keberagaman Indonesia, apakah ada sikapmu yang ingin diperbaiki? Ceritakan sikap tersebut dan perubahan yang ingin kamu lakukan."
 ]},
 action:{label:"Kartu Aksi",points:10,cls:"action",emoji:"🎭",cards:[
-"Peragakan cara berkenalan dengan teman baru menggunakan bahasa Indonesia yang santun.",
-"Ucapkan dua kalimat yang menunjukkan kebanggaanmu menggunakan bahasa Indonesia.",
-"Peragakan cara mengajak teman bermain menggunakan bahasa Indonesia yang santun.",
-"Peragakan cara membantu teman yang kesulitan berbicara menggunakan bahasa Indonesia.",
-"Sampaikan pendapatmu tentang pentingnya bahasa Indonesia saat bermain bersama teman dari daerah berbeda.",
-"Peragakan cara menegur teman yang mengejek logat bahasa Indonesia orang lain.",
-"Peragakan cara menyapa tetangga menggunakan bahasa Indonesia yang santun.",
-"Buat dan ucapkan satu kalimat ajakan untuk bangga menggunakan bahasa Indonesia.",
-"Peragakan cara menyampaikan pendapat saat berdiskusi tanpa merendahkan pendapat teman.",
-"Ceritakan satu contoh kegiatan di lingkungan sekitar yang menunjukkan kebanggaanmu menggunakan bahasa Indonesia."
+"Bacalah cerita ini: Raka tidak diajak bermain karena warna kulit dan rambutnya berbeda dari teman-temannya. Menurutmu, bagaimana perasaan Raka? Apa yang sebaiknya dilakukan teman-temannya?",
+"Bacalah cerita ini: Siti membawa makanan khas daerahnya. Beberapa anak menertawakan bentuk dan baunya. Apa masalah dalam cerita ini? Bagaimana cara membantu Siti?",
+"Bacalah cerita ini: Made ingin menjelaskan tradisi keluarganya, tetapi teman-temannya tidak mau mendengarkan. Apa yang mungkin dirasakan Made? Apa tindakan yang dapat dilakukan kelompokmu?",
+"Di kelas ada teman yang sedang beribadah sesuai agamanya. Susunlah langkah sederhana agar teman-teman dapat menghormati waktu dan kebutuhan ibadahnya.",
+"Saat istirahat, seorang anak diejek karena logat daerahnya. Rencanakan tiga tindakan yang dapat dilakukan kelompokmu untuk menghentikan ejekan dan mendukung anak tersebut.",
+"Sekolah akan mengadakan hari keberagaman. Kegiatan apa yang akan kelompokmu rencanakan agar siswa dapat mengenal budaya satu sama lain tanpa merendahkan budaya mana pun?",
+"Ada teman baru dari suku yang belum dikenal oleh anggota kelompokmu. Rencanakan cara menyambut dan mengajaknya terlibat dalam kegiatan kelas.",
+"Beberapa siswa menganggap tradisi daerah lain aneh. Bagaimana kelompokmu dapat membantu mereka mengenal tradisi tersebut dengan sikap terbuka dan rasa ingin tahu?",
+"Kelasmu ingin membuat kesepakatan agar semua siswa merasa dihargai meskipun berbeda agama, suku, atau ras. Tuliskan tiga aturan yang akan kelompokmu usulkan.",
+"Pilih satu masalah tentang sikap tidak menghargai keberagaman yang mungkin terjadi di sekolah atau lingkungan rumah. Jelaskan permasalahannya, siapa yang perlu dibantu, dan rencana aksi kelompokmu untuk mengatasinya."
 ]},
 group:{label:"Tantangan Kelompok",points:15,cls:"group",emoji:"🤝",cards:[
-"Sebutkan tiga contoh perilaku bangga menggunakan bahasa Indonesia di sekolah dalam waktu 30 detik.",
-"Setiap anggota kelompok secara bergantian melanjutkan kalimat: Aku bangga menggunakan bahasa Indonesia karena ....",
-"Buat satu slogan tentang kebanggaan menggunakan bahasa Indonesia sebagai bahasa persatuan, lalu bacakan bersama.",
-"Peragakan percakapan sekelompok anak dari daerah berbeda yang sedang berkenalan menggunakan bahasa Indonesia.",
-"Diskusikan tiga cara menggunakan bahasa Indonesia untuk menjaga kerukunan di lingkungan sekitar, lalu sampaikan hasilnya.",
-"Sebutkan tiga contoh kegiatan di lingkungan masyarakat yang dapat menggunakan bahasa Indonesia.",
-"Buat percakapan singkat tentang bermain bersama teman dari daerah berbeda. Setiap anggota harus berkontribusi.",
-"Peragakan situasi ketika kelompok kalian membantu teman yang malu menggunakan bahasa Indonesia.",
-"Diskusikan cara bangga menggunakan bahasa Indonesia tanpa merendahkan bahasa daerah, lalu jelaskan hasilnya.",
-"Setiap anggota menyebutkan satu tindakan nyata untuk menunjukkan kebanggaan menggunakan bahasa Indonesia di lingkungan sekitar."
+"Diskusikan tiga manfaat keberagaman suku dan budaya bagi Indonesia. Sampaikan hasil diskusi bersama.",
+"Setiap anggota menyebutkan satu budaya daerah yang ingin dikenalnya dan alasan ingin mempelajarinya.",
+"Buat satu slogan singkat yang mengajak teman-teman menghargai perbedaan suku, agama, dan ras.",
+"Susun tiga contoh tindakan yang dapat membuat teman dari latar belakang berbeda merasa diterima di kelas.",
+"Pilih satu tradisi daerah yang diketahui kelompokmu. Jelaskan asal daerah dan nilai baik yang dapat dipelajari.",
+"Diskusikan mengapa perbedaan agama tidak menghalangi seseorang untuk berteman dan bekerja sama.",
+"Buat kesepakatan kelompok tentang cara berbicara ketika ada teman yang memiliki kebiasaan atau ciri fisik berbeda.",
+"Sebutkan tiga cara mengenalkan budaya daerah kepada teman tanpa menganggap budaya sendiri lebih baik.",
+"Diskusikan apa yang dapat dilakukan siswa ketika melihat tindakan mengejek suku, agama, ras, atau budaya seseorang.",
+"Setiap anggota menyebutkan satu tindakan nyata yang akan dilakukan untuk menjaga kerukunan di lingkungan sekolah."
 ]}
 };
 
 const correctAnswers = {
 knowledge:[
-"Kita perlu bangga menggunakan bahasa Indonesia karena bahasa Indonesia adalah bahasa persatuan yang membantu orang dari berbagai daerah saling memahami.",
-"Contohnya, berbicara bahasa Indonesia dengan santun saat berdiskusi dan menggunakan bahasa Indonesia ketika bekerja kelompok dengan teman.",
-"Kita dapat mengajak teman bermain, berbagi tugas, dan berbicara dengan bahasa Indonesia yang santun agar semua teman memahami.",
-"Karena bahasa Indonesia menjadi bahasa bersama sehingga teman dari daerah berbeda dapat berkomunikasi dan bekerja sama.",
-"Contohnya, rapat warga dan kegiatan kerja bakti atau acara lingkungan yang melibatkan orang dari berbagai daerah.",
-"Gunakan kata-kata yang sopan, menyapa dengan ramah, mendengarkan saat tetangga berbicara, dan tidak memotong pembicaraan.",
-"Saya dapat menyampaikan pendapat dengan jelas dan santun, mendengarkan teman, serta tidak mengejek cara bicara orang lain.",
-"Karena setiap orang memiliki kebiasaan bicara yang berbeda. Kita harus menghormati perbedaan dan tidak mengejek logat teman.",
-"Saya dapat menyapa warga, ikut berdiskusi, dan menyampaikan pendapat dengan bahasa Indonesia yang santun.",
-"Contohnya, menggunakan bahasa Indonesia untuk berkomunikasi, bangga saat memakainya, dan menghormati teman yang memiliki logat berbeda."
+"Keberagaman suku bangsa adalah keadaan masyarakat Indonesia yang terdiri atas berbagai kelompok suku dengan adat dan budaya masing-masing. Contohnya suku Jawa dan Sunda.",
+"Pakaian adat memiliki ciri khas karena sejarah, lingkungan, dan kebiasaan budaya setiap daerah berbeda. Contohnya Baju Bodo dari Sulawesi Selatan.",
+"Contohnya tradisi Ngaben dari Bali dan Sekaten dari Yogyakarta atau Surakarta.",
+"Bahasa daerah adalah bahasa yang digunakan masyarakat di wilayah tertentu. Bahasa daerah perlu dilestarikan sebagai bagian dari identitas dan kekayaan budaya.",
+"Enam agama tersebut adalah Islam, Kristen Protestan, Katolik, Hindu, Buddha, dan Konghucu. Kita perlu menghormati teman dengan tidak mengganggu ibadahnya dan tidak mengejek keyakinannya.",
+"Ras berkaitan dengan pengelompokan manusia berdasarkan ciri fisik tertentu. Perbedaan fisik adalah hal yang wajar dan tidak menentukan nilai atau martabat seseorang.",
+"Bhinneka Tunggal Ika berarti berbeda-beda tetapi tetap satu. Contohnya berteman dan bekerja sama tanpa membeda-bedakan suku, agama, atau budaya.",
+"Keberagaman memperkaya adat, bahasa, kesenian, pengetahuan, dan cara hidup masyarakat Indonesia.",
+"Contohnya mendengarkan saat teman bercerita tentang budayanya dan tidak mengejek kebiasaan atau logatnya.",
+"Persatuan membuat masyarakat dapat hidup rukun dan bekerja sama meskipun memiliki latar belakang yang berbeda."
 ],
 situation:[
-"Kamu dapat menyapa dengan ramah, memperkenalkan nama, lalu bertanya kabar menggunakan bahasa Indonesia yang santun.",
-"Ajak teman menggunakan bahasa Indonesia agar semua memahami percakapan. Bahasa daerah tetap boleh digunakan pada situasi yang dipahami bersama, tanpa mengucilkan teman.",
-"Jangan ikut mengejek. Ingatkan teman dengan sopan bahwa setiap orang memiliki logat berbeda dan kita harus saling menghargai.",
-"Sampaikan pendapat dengan jelas, gunakan kata-kata yang santun, dengarkan pendapat teman, dan jangan memaksakan kehendak.",
-"Kamu dapat menggunakan bahasa Indonesia karena merupakan bahasa persatuan yang membantu orang dari daerah berbeda saling memahami.",
-"Katakan bahwa tidak apa-apa belajar dan melakukan kesalahan. Ajak teman berlatih dan hargai usahanya.",
-"Tanggapi dengan sopan, ingatkan teman untuk memilih kata-kata yang baik, dan beri kesempatan semua orang berbicara.",
-"Gunakan bahasa Indonesia yang jelas dan santun, serta pastikan semua teman mendapat kesempatan untuk berbicara.",
-"Bahasa Indonesia patut dibanggakan karena menyatukan masyarakat dari berbagai daerah dan memudahkan kita berkomunikasi.",
-"Bela teman dengan sopan, hentikan ejekan, dan ajak teman lain menghargai orang yang sedang belajar menggunakan bahasa Indonesia."
+"Jawaban berdasarkan pengalaman siswa. Arah refleksi: menceritakan pengalaman, menyebutkan perasaan, dan menunjukkan sikap menghargai.",
+"Siswa dapat merasa sedih atau tidak nyaman. Sikap yang tepat adalah tidak ikut mengejek, mengingatkan dengan sopan, dan membela teman yang diperlakukan tidak adil.",
+"Teman tersebut mungkin merasa sedih atau tersisih. Ajak ia bergabung, bagi tugas secara adil, dan perlakukan semua anggota dengan setara.",
+"Jawaban berdasarkan pengalaman siswa. Arah refleksi: menyebutkan hal baru yang dipelajari dan menghargai tradisi yang berbeda.",
+"Teman-temannya perlu menghormati waktu ibadah dan tidak memaksa. Mereka dapat mengatur waktu bermain yang tidak mengganggu ibadah.",
+"Menghargai logat teman dan tidak menirukan untuk mengejek. Setiap daerah memiliki cara berbicara yang beragam.",
+"Jawaban berdasarkan pengalaman siswa. Arah refleksi: menceritakan kerja sama dan perasaan saat saling menghargai.",
+"Menjelaskan dengan ramah, tidak memaksa teman untuk langsung memahami, dan memberi kesempatan untuk bertanya.",
+"Siswa berharap disambut, diajak berkenalan, tidak diejek, dan diberi kesempatan ikut kegiatan bersama.",
+"Jawaban berdasarkan refleksi siswa. Arah refleksi: menyebutkan sikap yang ingin diperbaiki dan perubahan nyata yang akan dilakukan."
 ],
 action:[
-"Contohnya: Halo, namaku Rani. Senang berkenalan denganmu. Siapa namamu?",
-"Contohnya: Aku bangga menggunakan bahasa Indonesia karena menyatukan kita. Aku akan menggunakannya dengan santun.",
-"Contohnya: Ayo, kita bermain bersama. Kita bisa bergantian agar semua mendapat kesempatan.",
-"Contohnya: Tidak apa-apa, kita belajar bersama. Kamu boleh mencoba berbicara pelan-pelan, aku akan mendengarkan.",
-"Bahasa Indonesia membantu kami saling memahami saat bermain dan bekerja sama meskipun berasal dari daerah berbeda.",
-"Contohnya: Tolong jangan mengejek logat teman, ya. Setiap orang berbicara dengan cara yang berbeda dan kita harus saling menghargai.",
-"Contohnya: Selamat pagi, Bu atau Pak. Apa kabar? Gunakan nada ramah dan kata-kata yang sopan.",
-"Contohnya: Ayo, kita bangga menggunakan bahasa Indonesia sebagai bahasa persatuan dan tetap menghargai bahasa daerah.",
-"Sampaikan pendapat dengan sopan, dengarkan teman sampai selesai, dan tanggapi gagasannya tanpa mengejek.",
-"Contohnya, menggunakan bahasa Indonesia saat rapat warga, kegiatan kerja bakti, atau bermain bersama anak-anak dari daerah berbeda."
+"Raka mungkin merasa sedih, malu, atau tersisih. Teman-temannya seharusnya mengajak Raka bermain, meminta maaf, dan tidak membeda-bedakan berdasarkan ciri fisik.",
+"Masalahnya adalah Siti ditertawakan karena makanan khas daerahnya. Kelompok dapat menghentikan ejekan, meminta teman menghargai makanan tersebut, dan memberi kesempatan Siti bercerita.",
+"Made mungkin merasa kecewa atau tidak dihargai. Kelompok dapat mengajak teman mendengarkan, memberi Made kesempatan bercerita, dan bertanya dengan sopan.",
+"Contohnya menanyakan waktu yang tepat untuk bermain, tidak mengganggu saat ibadah, dan memberi kesempatan teman menjalankan ibadahnya.",
+"Contohnya menghentikan ejekan dengan sopan, menemani dan mendukung teman, serta mengajak kelas membuat kesepakatan tidak mengejek logat.",
+"Contohnya pameran budaya sederhana, berbagi cerita atau gambar tradisi keluarga, dan permainan yang melibatkan semua siswa secara setara.",
+"Contohnya menyapa dengan ramah, mengenalkan teman-teman, mengajak bergabung dalam kelompok, dan membantu mengenal lingkungan kelas.",
+"Kelompok dapat mencari informasi yang benar, mendengarkan cerita dari orang yang memahami tradisi tersebut, lalu berbagi pengetahuan tanpa mengejek.",
+"Contoh aturan: tidak mengejek perbedaan, mendengarkan saat teman bercerita, dan memberi kesempatan yang sama kepada semua siswa.",
+"Jawaban dapat berbeda. Rencana yang baik menyebutkan masalah, pihak yang perlu dibantu, tindakan yang jelas, siapa yang terlibat, dan tujuan tindakan."
 ],
 group:[
-"Contohnya, berdiskusi dengan bahasa Indonesia, berbicara dengan santun, dan membantu teman yang belum memahami percakapan.",
-"Setiap anggota dapat melengkapi kalimat dengan alasan seperti: bahasa Indonesia menyatukan kita, memudahkan komunikasi, dan membantu berteman dengan siapa saja.",
-"Contoh slogan: Bangga Berbahasa Indonesia, Bersatu dalam Keberagaman!",
-"Percakapan yang baik menunjukkan anak-anak saling menyapa, memperkenalkan diri, dan berbicara dengan bahasa Indonesia yang santun.",
-"Contohnya, menggunakan bahasa Indonesia dalam rapat, memberi kesempatan semua orang berbicara, dan menghargai pendapat yang berbeda.",
-"Contohnya, rapat warga, kerja bakti, dan acara lingkungan yang diikuti masyarakat dari berbagai daerah.",
-"Percakapan harus menunjukkan semua anggota berkontribusi, menggunakan bahasa Indonesia agar saling memahami, dan berbicara dengan sopan.",
-"Kelompok dapat menyemangati teman, menawarkan bantuan untuk berlatih, dan tidak menertawakan kesalahan.",
-"Bangga menggunakan bahasa Indonesia bukan berarti merendahkan bahasa daerah. Keduanya perlu dihargai sesuai situasi penggunaannya.",
-"Setiap anggota dapat berjanji menggunakan bahasa Indonesia dengan santun saat berkomunikasi dengan teman dari daerah berbeda serta tidak mengejek logat."
+"Keberagaman memperkaya budaya, menambah pengetahuan, dan mengajarkan sikap saling menghargai.",
+"Setiap anggota menyampaikan pilihan budaya dan alasan dengan saling mendengarkan.",
+"Contoh: Berbeda Itu Indah, Bersama Kita Kuat!",
+"Contohnya menyapa teman baru, mengajak bergabung, dan membagi tugas tanpa membeda-bedakan.",
+"Jawaban disesuaikan dengan tradisi yang dipilih. Siswa menyebutkan daerah asal dan nilai baik seperti gotong royong atau rasa syukur.",
+"Pertemanan dan kerja sama dibangun atas sikap saling menghormati, bukan kesamaan agama.",
+"Kesepakatan dapat berupa tidak mengejek, mendengarkan dengan sopan, dan menyelesaikan perbedaan melalui diskusi.",
+"Contohnya berbagi cerita, gambar, lagu, atau permainan daerah dengan menjelaskan bahwa semua budaya patut dihargai.",
+"Siswa dapat menghentikan ejekan, mendukung orang yang menjadi sasaran, melapor kepada guru bila perlu, dan mengajak teman menghargai perbedaan.",
+"Jawaban tiap anggota dapat berbeda. Tindakan harus sederhana, positif, dan dapat dilakukan di sekolah."
 ]
 };
 
@@ -289,10 +315,9 @@ return `<svg class="map" viewBox="0 0 600 250" role="img" aria-label="Ilustrasi 
 </g>
 <g fill="#fff2a8"><circle cx="62" cy="63" r="3"/><circle cx="200" cy="122" r="3"/><circle cx="187" cy="175" r="3"/><circle cx="331" cy="105" r="3"/><circle cx="454" cy="121" r="3"/><circle cx="485" cy="120" r="3"/></g></svg>`;
 }
-
-function renderBoard(){
+  function renderBoard(){
 const board=document.getElementById("board");
-board.innerHTML=`<div class="board-center"><div class="center-content"><div class="center-title">🌏 JELAJAH NUSANTARA</div><div class="center-sub">Misi Bahasa Persatuan</div>${mapMarkup()}<div class="map-note">Berbeda pulau, tetap satu Indonesia! 🇮🇩</div></div></div>`;
+board.innerHTML=`<div class="board-center"><div class="center-content"><div class="center-title">🌏 JELAJAH NUSANTARA</div><div class="center-sub">Misi Keberagaman Nusantara</div>${mapMarkup()}<div class="map-note">Berbeda suku dan budaya, tetap satu Indonesia! 🇮🇩</div></div></div>`;
 pathTypes.forEach((type,i)=>{
 const tile=document.createElement("div");
 tile.className="tile "+type;
@@ -387,7 +412,7 @@ return {prompt:arr[index],index};
 
 function showChallenge(type,prompt,cardIndex){
 const data=types[type];activeChallenge={type,points:data.points,prompt,cardIndex};
-document.getElementById("challenge").innerHTML=`<div class="type">${data.emoji} ${data.label}</div><div class="prompt">${escapeHtml(prompt)}</div><span class="points">${data.points} poin jika berhasil</span>`;
+document.getElementById("challenge").innerHTML=`<div class="type">${data.emoji} ${data.label}</div><div class="prompt">${escapeHtml(prompt)}</div><span class="points">${data.points} poin jika berhasil</span><p class="small">Diskusikan pertanyaan bersama kelompok, lalu sampaikan jawaban secara lisan.</p>`;
 document.getElementById("successBtn").disabled=false;
 document.getElementById("failBtn").disabled=false;
 document.getElementById("judgeHelp").textContent="Diskusikan atau lakukan tantangan. Guru menilai, lalu pilih hasilnya.";
@@ -443,7 +468,7 @@ document.getElementById("rollHelp").textContent+=" Lanjutkan giliran setelah sel
 function learningFeedback(type,success,cardIndex){
 const answer=correctAnswers[type]?.[cardIndex];
 if(answer)return answer;
-return "Bahasa Indonesia membantu kita saling memahami. Gunakan bahasa yang santun, percaya diri, dan tetap menghargai bahasa daerah.";
+return "Keberagaman adalah kekayaan Indonesia. Hargai setiap orang, jangan mengejek perbedaan, dan lakukan tindakan yang membuat semua orang merasa diterima.";
 }
 
 function showFeedback(success,type,cardIndex){
@@ -478,8 +503,7 @@ document.getElementById("phaseLabel").textContent=success?"Tahap: tantangan berh
 playTone(success?880:330,.18);
 finishTurn();
 }
-
-function nextTurn(){
+  function nextTurn(){
 if("speechSynthesis" in window)window.speechSynthesis.cancel();
 current=(current+1)%teams.length;waiting=false;
 document.getElementById("nextBtn").disabled=true;
@@ -539,6 +563,63 @@ box.appendChild(row);
 });
 }
 
+function buildActionRecap(){
+  const grid=document.getElementById("recapGrid");
+  grid.innerHTML="";
+  teams.forEach((team,i)=>{
+    const card=document.createElement("div");
+    card.className="recap-team";
+    card.innerHTML=`<h3><span style="color:${teamColors[i]}">●</span> ${escapeHtml(team.name)}</h3>
+      <label for="recapProblem${i}">1. Permasalahan yang ingin diperhatikan kelompok</label>
+      <textarea id="recapProblem${i}" placeholder="Masalah apa yang kalian temukan dari kartu-kartu yang didiskusikan?"></textarea>
+      <label for="recapFeeling${i}">2. Perasaan orang yang mengalami masalah</label>
+      <textarea id="recapFeeling${i}" placeholder="Bagaimana kira-kira perasaan orang tersebut? Mengapa?"></textarea>
+      <label for="recapSolution${i}">3. Solusi yang disepakati kelompok</label>
+      <textarea id="recapSolution${i}" placeholder="Apa yang dapat dilakukan untuk membantu atau menyelesaikan masalah?"></textarea>
+      <label for="recapAction${i}">4. Rencana aksi kelompok (apa, siapa, dan kapan)</label>
+      <textarea id="recapAction${i}" placeholder="Tuliskan tindakan yang akan dilakukan, siapa yang terlibat, dan kapan dilakukan."></textarea>
+      <label for="recapGoal${i}">5. Tujuan yang ingin dicapai</label>
+      <textarea id="recapGoal${i}" placeholder="Perubahan baik apa yang ingin diwujudkan?"></textarea>`;
+    grid.appendChild(card);
+  });
+}
+
+function saveActionRecap(){
+  const data=teams.map((team,i)=>({
+    name:team.name,
+    problem:document.getElementById(`recapProblem${i}`).value.trim(),
+    feeling:document.getElementById(`recapFeeling${i}`).value.trim(),
+    solution:document.getElementById(`recapSolution${i}`).value.trim(),
+    action:document.getElementById(`recapAction${i}`).value.trim(),
+    goal:document.getElementById(`recapGoal${i}`).value.trim()
+  }));
+  try{localStorage.setItem("jelajahNusantaraActionRecap",JSON.stringify(data));
+    document.getElementById("recapStatus").textContent="Rekap berhasil disimpan di browser ini.";
+  }catch(e){document.getElementById("recapStatus").textContent="Rekap belum dapat disimpan otomatis. Silakan cetak atau salin hasil isian.";}
+}
+function loadActionRecap(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("jelajahNusantaraActionRecap")||"[]");
+    saved.forEach((item,i)=>{
+      if(i>=teams.length)return;
+      ["problem","feeling","solution","action","goal"].forEach(key=>{
+        const el=document.getElementById(`recap${key[0].toUpperCase()+key.slice(1)}${i}`);
+        if(el)el.value=item[key]||"";
+      });
+    });
+  }catch(e){}
+}
+function clearActionRecap(){
+  if(!confirm("Hapus semua isian rekap rencana aksi?"))return;
+  teams.forEach((team,i)=>{
+    ["problem","feeling","solution","action","goal"].forEach(key=>{
+      const el=document.getElementById(`recap${key[0].toUpperCase()+key.slice(1)}${i}`);if(el)el.value="";
+    });
+  });
+  try{localStorage.removeItem("jelajahNusantaraActionRecap");}catch(e){}
+  document.getElementById("recapStatus").textContent="Semua isian rekap telah dikosongkan.";
+}
+
 document.getElementById("rollBtn").addEventListener("click",roll);
 document.getElementById("soundBtn").addEventListener("click",()=>{
 soundEnabled=!soundEnabled;
@@ -570,9 +651,13 @@ const val=document.getElementById("teamName"+i).value.trim();
 t.name=val||"Kelompok "+(i+1);
 });
 renderScores();
+teams.forEach((t,i)=>{const h=document.querySelectorAll(".recap-team h3")[i];if(h)h.innerHTML=`<span style="color:${teamColors[i]}">●</span> ${escapeHtml(t.name)}`;});
 document.getElementById("rollStatus").textContent="Nama kelompok tersimpan";
 });
-buildNameInputs();renderBoard();renderScores();setTimerFromInput();
+buildNameInputs();buildActionRecap();loadActionRecap();renderBoard();renderScores();setTimerFromInput();
+document.getElementById("saveRecapBtn").addEventListener("click",saveActionRecap);
+document.getElementById("printRecapBtn").addEventListener("click",()=>window.print());
+document.getElementById("clearRecapBtn").addEventListener("click",clearActionRecap);
 </script>
 </body>
 </html>
